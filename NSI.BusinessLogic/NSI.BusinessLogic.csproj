@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Validators\Azure\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="9.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NSI.Common\NSI.Common.csproj" />
+    <ProjectReference Include="..\NSI.DataContracts\NSI.DataContracts.csproj" />
+    <ProjectReference Include="..\NSI.Repository\NSI.Repository.csproj" />
+    <ProjectReference Include="..\NSI.Resources\NSI.Resources.csproj" />
+  </ItemGroup>
+
+</Project>
