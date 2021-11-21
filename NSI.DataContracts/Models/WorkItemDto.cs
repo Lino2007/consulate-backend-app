@@ -1,13 +1,12 @@
 ﻿using Newtonsoft.Json;
 using NSI.Common.DataContracts.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NSI.DataContracts.Models
 {
     public class WorkItemDto : BaseModelDto
     {
+        public new int? Id { get; set; }
+
         [JsonProperty(PropertyName = "System.Title")]
         public string Title { get; set; }
 

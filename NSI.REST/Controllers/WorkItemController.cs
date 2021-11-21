@@ -11,6 +11,8 @@ using NSI.REST.Helpers;
 using NSI.DataContracts.Response;
 using NSI.BusinessLogic.Implementations;
 using NSI.BusinessLogic.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+
 namespace NSI.REST.Controllers
 {
     [ApiController]
@@ -25,6 +27,7 @@ namespace NSI.REST.Controllers
             _workItemsManipulation = workItemsManipulation;
         }
 
+        [Authorize]
         [HttpPost("workitems")]
         public async Task<SearchWorkItemsResponse> SearchWorkItems(SearchWorkItemsRequest request)
         {
