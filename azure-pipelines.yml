@@ -4,24 +4,68 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+- main
+- prod
+- uat
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
+  ${{ if eq(variables['Build.SourceBranchName'], 'uat') }}:
+    buildConfiguration: uat
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    buildConfiguration: development
+  ${{ if eq(variables['Build.SourceBranchName'], 'prod') }}:
+    buildConfiguration: production
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK'
   inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    version: 5.x
+    performMultiLevelLookup: True
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: '**/*.csproj'
+    arguments: '--configuration $(BuildConfiguration)'
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
     publishLocation: 'pipeline'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Execute Unit Tests'
+  inputs:
+    command: test
+    projects: '**/UnitTests/*.csproj'
+    arguments: '--configuration $(BuildConfiguration)'
+    testRunTitle: 'Unit Tests for $(Build.BuildNumber)'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: True
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: nsiService
+  condition: succeededOrFailed()
