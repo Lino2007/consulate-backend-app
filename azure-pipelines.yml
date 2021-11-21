@@ -12,7 +12,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     buildConfiguration: development
   ${{ if eq(variables['Build.SourceBranchName'], 'uat') }}:
