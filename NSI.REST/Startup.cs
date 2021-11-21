@@ -1,30 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NSI.BusinessLogic.Implementations;
 using NSI.BusinessLogic.Interfaces;
 using NSI.BusinessLogic.Validators;
 using NSI.Cache.Implementations;
 using NSI.Cache.Interfaces;
-using NSI.Common.Utilities;
 using NSI.DataContracts.Models;
 using NSI.Logger.Implementations;
 using NSI.Logger.Interfaces;
 using NSI.Proxy.Azure;
+using NSI.Repository;
 using NSI.Repository.Implementations;
 using NSI.Repository.Interfaces;
 using NSI.REST.Middlewares;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace NSI.REST
 {
@@ -40,6 +37,8 @@ namespace NSI.REST
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>(p => p.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(Configuration, "AzureAd");
             services.AddControllers();
             services.AddSwaggerGen();
 
@@ -47,7 +46,7 @@ namespace NSI.REST
                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                .AddApiExplorer() // Required to redirect base URL to swagger site
                .AddRazorViewEngine() // Required to manipulate swagger view
-               .AddFluentValidation(fv => { fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; }); 
+               .AddFluentValidation(fv => { fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; });
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
             // Logger
@@ -76,11 +75,15 @@ namespace NSI.REST
 
         private void RegisterRepositories(IServiceCollection services)
         {
+            services.AddTransient<IPermissionsManipulation, PermissionsManipulation>();
+            services.AddTransient<IRolesManipulation, RolesManipulation>();
             services.AddTransient<IWorkItemsManipulation, WorkItemsManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
         {
+            services.AddTransient<IPermissionsRepository, PermissionsRepository>();
+            services.AddTransient<IRolesRepository, RolesRepository>();
             services.AddTransient<IWorkItemsRepository, WorkItemsRepository>();
         }
 
@@ -117,6 +120,7 @@ namespace NSI.REST
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
