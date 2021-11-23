@@ -38,7 +38,7 @@ namespace NSI.REST
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(p => p.UseSqlServer(Configuration.GetConnectionString("Default")));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(Configuration, "AzureAd");
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(Configuration);
             services.AddControllers();
             services.AddSwaggerGen();
 
