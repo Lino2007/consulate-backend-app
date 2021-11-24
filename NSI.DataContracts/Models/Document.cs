@@ -14,7 +14,7 @@ namespace NSI.DataContracts.Models
         public Guid TypeId { get; set; }
 
         [JsonProperty(PropertyName = "dateCreated")]
-        public DateTime DateCreated { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         [JsonProperty(PropertyName = "dateOfExpiration")]
         public DateTime DateOfExpiration { get; set; }
@@ -23,7 +23,7 @@ namespace NSI.DataContracts.Models
         public string Url { get; set; }
 
         [JsonProperty(PropertyName = "active")]
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
 
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
@@ -33,5 +33,14 @@ namespace NSI.DataContracts.Models
 
         [ForeignKey("TypeId")]
         public DocumentType Type { get; set; }
+
+        public Document(Guid requestId, Guid typeId, DateTime dateOfExpiration, string url, string title)
+        {
+            RequestId = requestId;
+            TypeId = typeId;
+            DateOfExpiration = dateOfExpiration;
+            Url = url;
+            Title = title;
+        }
     }
 }

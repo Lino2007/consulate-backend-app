@@ -7,5 +7,10 @@ namespace NSI.DataContracts.Models
     {
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+
+        public DocumentType(string name)
+        {
+            Name = name;
+        }
     }
 }

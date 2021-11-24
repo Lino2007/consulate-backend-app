@@ -8,7 +8,7 @@ namespace NSI.DataContracts.Models
     public class User : BaseModelDto
     {
         [JsonProperty(PropertyName = "dateCreated")]
-        public DateTime DateCreated { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         [JsonProperty(PropertyName = "firstName")]
         public string FirstName { get; set; }
@@ -25,9 +25,6 @@ namespace NSI.DataContracts.Models
         [JsonProperty(PropertyName = "username")]
         public string Username { get; set; }
 
-        [JsonProperty(PropertyName = "password")]
-        public string Password { get; set; }
-
         [JsonProperty(PropertyName = "placeOfBirth")]
         public string PlaceOfBirth { get; set; }
 
@@ -38,6 +35,18 @@ namespace NSI.DataContracts.Models
         public string Country { get; set; }
 
         [JsonProperty(PropertyName = "active")]
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
+
+        public User(string firstName, string lastName, Gender gender, string email, string username, string placeOfBirth, DateTime dateOfBirth, string country)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Gender = gender;
+            Email = email;
+            Username = username;
+            PlaceOfBirth = placeOfBirth;
+            DateOfBirth = dateOfBirth;
+            Country = country;
+        }
     }
 }
