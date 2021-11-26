@@ -12,7 +12,7 @@ namespace NSI.DataContracts.Models
         public Guid UserId { get; set; }
 
         [JsonProperty(PropertyName = "employeeId")]
-        public Guid EmployeeId { get; set; }
+        public Guid? EmployeeId { get; set; }
 
         [JsonProperty(PropertyName = "dateCreated")]
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
@@ -21,18 +21,20 @@ namespace NSI.DataContracts.Models
         public string Reason { get; set; }
 
         [JsonProperty(PropertyName = "type")]
+        [Column(TypeName = "nvarchar(50)")]
         public RequestType Type { get; set; }
 
         [JsonProperty(PropertyName = "state")]
+        [Column(TypeName = "nvarchar(50)")]
         public RequestState State { get; set; } = RequestState.Pending;
 
-        [ForeignKey("UserId")]
-        public User User { get; set; }
+        [ForeignKey("UserId")] public User User { get; set; }
 
-        [ForeignKey("EmployeeId")]
-        public User Employee { get; set; }
+        [ForeignKey("EmployeeId")] public User Employee { get; set; }
 
-        public Request(Guid userId, Guid employeeId, string reason, RequestType type)
+        public Request(Guid userId, string reason, RequestType type) : this(userId, null, reason, type) { }
+
+        public Request(Guid userId, Guid? employeeId, string reason, RequestType type)
         {
             UserId = userId;
             EmployeeId = employeeId;

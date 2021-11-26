@@ -2,6 +2,7 @@
 using NSI.Common.DataContracts.Base;
 using NSI.Common.Enumerations;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NSI.DataContracts.Models
 {
@@ -17,6 +18,7 @@ namespace NSI.DataContracts.Models
         public string LastName { get; set; }
 
         [JsonProperty(PropertyName = "gender")]
+        [Column(TypeName = "nvarchar(50)")]
         public Gender Gender { get; set; }
 
         [JsonProperty(PropertyName = "email")]

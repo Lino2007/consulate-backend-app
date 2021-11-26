@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -39,7 +40,7 @@ namespace NSI.REST
         {
             services.AddDbContext<DataContext>(p => p.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(Configuration);
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddSwaggerGen();
 
             services.AddMvcCore()
@@ -78,6 +79,8 @@ namespace NSI.REST
             services.AddTransient<IPermissionsManipulation, PermissionsManipulation>();
             services.AddTransient<IRolesManipulation, RolesManipulation>();
             services.AddTransient<IWorkItemsManipulation, WorkItemsManipulation>();
+            services.AddTransient<IRequestsManipulation, RequestsManipulation>();
+            services.AddTransient<IUsersManipulation, UsersManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
@@ -85,6 +88,8 @@ namespace NSI.REST
             services.AddTransient<IPermissionsRepository, PermissionsRepository>();
             services.AddTransient<IRolesRepository, RolesRepository>();
             services.AddTransient<IWorkItemsRepository, WorkItemsRepository>();
+            services.AddTransient<IRequestsRepository, RequestsRepository>();
+            services.AddTransient<IUsersRepository, UsersRepository>();
         }
 
         private void RegisterProxies(IServiceCollection services)
