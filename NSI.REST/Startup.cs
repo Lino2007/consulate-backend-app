@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -23,6 +26,7 @@ using NSI.Repository.Interfaces;
 using NSI.REST.Middlewares;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace NSI.REST
 {
@@ -43,7 +47,30 @@ namespace NSI.REST
                 .AddMicrosoftIdentityWebApi(Configuration);
             services.AddControllers()
                 .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "NSI Echo API",
+                    Description = "Consulate ASP.NET Core Web API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Faculty of Electrical Engineering, University of Sarajevo",
+                        Url = new Uri("https://etf.unsa.ba/")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under MIT license",
+                        Url = new Uri("https://choosealicense.com/licenses/mit/")
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             services.AddMvcCore()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)

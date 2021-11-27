@@ -19,6 +19,9 @@ namespace NSI.REST.Controllers
             _authManipulation = authManipulation;
         }
         
+        /// <summary>
+        /// Gets user information by email.
+        /// </summary>
         [HttpGet]
         public BaseResponse<User> GetUserInformation([FromQuery(Name = "email")] string email)
         {
