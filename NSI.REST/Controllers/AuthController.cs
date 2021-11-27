@@ -22,6 +22,7 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Gets user information by email.
         /// </summary>
+        [Authorize]
         [HttpGet]
         public BaseResponse<User> GetUserInformation([FromQuery(Name = "email")] string email)
         {
