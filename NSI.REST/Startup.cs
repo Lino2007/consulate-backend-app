@@ -39,15 +39,17 @@ namespace NSI.REST
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(p => p.UseSqlServer(Configuration.GetConnectionString("Default")));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(Configuration);
-            services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(Configuration);
+            services.AddControllers()
+                .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddSwaggerGen();
 
             services.AddMvcCore()
-               .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-               .AddApiExplorer() // Required to redirect base URL to swagger site
-               .AddRazorViewEngine() // Required to manipulate swagger view
-               .AddFluentValidation(fv => { fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; });
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddApiExplorer() // Required to redirect base URL to swagger site
+                .AddRazorViewEngine() // Required to manipulate swagger view
+                .AddFluentValidation(fv => { fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; });
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
             // Logger
@@ -81,6 +83,7 @@ namespace NSI.REST
             services.AddTransient<IWorkItemsManipulation, WorkItemsManipulation>();
             services.AddTransient<IRequestsManipulation, RequestsManipulation>();
             services.AddTransient<IUsersManipulation, UsersManipulation>();
+            services.AddTransient<IAuthManipulation, AuthManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
@@ -90,6 +93,7 @@ namespace NSI.REST
             services.AddTransient<IWorkItemsRepository, WorkItemsRepository>();
             services.AddTransient<IRequestsRepository, RequestsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IAuthRepository, AuthRepository>();
         }
 
         private void RegisterProxies(IServiceCollection services)
@@ -110,13 +114,11 @@ namespace NSI.REST
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NSI API");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "NSI API"); });
 
-            app.UseCors(options => options.WithOrigins((Configuration.GetValue<string>("AllowedOrigins") ?? "").Split(","))
-                    .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(options => options
+                .WithOrigins((Configuration.GetValue<string>("AllowedOrigins") ?? "").Split(","))
+                .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             // Mvc
             app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -128,10 +130,7 @@ namespace NSI.REST
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
