@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -23,6 +26,7 @@ using NSI.Repository.Interfaces;
 using NSI.REST.Middlewares;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace NSI.REST
 {
@@ -39,15 +43,40 @@ namespace NSI.REST
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(p => p.UseSqlServer(Configuration.GetConnectionString("Default")));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(Configuration);
-            services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-            services.AddSwaggerGen();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(Configuration);
+            services.AddControllers()
+                .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "NSI Echo API",
+                    Description = "Consulate ASP.NET Core Web API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Faculty of Electrical Engineering, University of Sarajevo",
+                        Url = new Uri("https://etf.unsa.ba/")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under MIT license",
+                        Url = new Uri("https://choosealicense.com/licenses/mit/")
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             services.AddMvcCore()
-               .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-               .AddApiExplorer() // Required to redirect base URL to swagger site
-               .AddRazorViewEngine() // Required to manipulate swagger view
-               .AddFluentValidation(fv => { fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; });
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddApiExplorer() // Required to redirect base URL to swagger site
+                .AddRazorViewEngine() // Required to manipulate swagger view
+                .AddFluentValidation(fv => { fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; });
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
             // Logger
@@ -81,6 +110,7 @@ namespace NSI.REST
             services.AddTransient<IWorkItemsManipulation, WorkItemsManipulation>();
             services.AddTransient<IRequestsManipulation, RequestsManipulation>();
             services.AddTransient<IUsersManipulation, UsersManipulation>();
+            services.AddTransient<IAuthManipulation, AuthManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
@@ -90,6 +120,7 @@ namespace NSI.REST
             services.AddTransient<IWorkItemsRepository, WorkItemsRepository>();
             services.AddTransient<IRequestsRepository, RequestsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IAuthRepository, AuthRepository>();
         }
 
         private void RegisterProxies(IServiceCollection services)
@@ -110,13 +141,11 @@ namespace NSI.REST
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NSI API");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "NSI API"); });
 
-            app.UseCors(options => options.WithOrigins((Configuration.GetValue<string>("AllowedOrigins") ?? "").Split(","))
-                    .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(options => options
+                .WithOrigins((Configuration.GetValue<string>("AllowedOrigins") ?? "").Split(","))
+                .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             // Mvc
             app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -128,10 +157,7 @@ namespace NSI.REST
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
