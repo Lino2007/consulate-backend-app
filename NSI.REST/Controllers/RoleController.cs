@@ -7,21 +7,48 @@ using NSI.DataContracts.Request;
 using NSI.DataContracts.Response;
 using NSI.REST.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using NSI.REST.Filters;
+using Microsoft.AspNetCore.Authorization;
+using NSI.Cache.Interfaces;
+using NSI.Common.Enumerations;
 
 namespace NSI.REST.Controllers
 {
+    [ServiceFilter(typeof(CacheCheck))] // Ucitavanje cachea iz baze (ako vec nije), dodavanje korisnika u cache ako je naknadno dodan i fetch permisija korisnika
+                                        // (NAJBOLJE staviti ovu anotaciju na razinu kontrolera posto ce nam sve rute biti uglavnom zasticene)
     [ApiController]
     [Route("api/[controller]")]
     public class RoleController : Controller
     {
         private readonly IRolesManipulation _rolesManipulation;
+        private readonly IUserPermissionManipulation _userPermissionManipulation;
+        private readonly ICacheProvider _cacheProvider;
 
-        public RoleController(IRolesManipulation rolesManipulation)
+        public RoleController(IRolesManipulation rolesManipulation, IUserPermissionManipulation userPermissionManipulation, ICacheProvider cacheProvider)
         {
             _rolesManipulation = rolesManipulation;
+            _userPermissionManipulation = userPermissionManipulation;
+            _cacheProvider = cacheProvider;
         }
 
+        /*
+        [HttpGet("Test")]
+        public async Task<string> Tester()
+        {
+            // method for testing 
+            var test = await _userPermissionManipulation.GetPermissionsForUserAsync("aturkusic1@etf.unsa.ba");
+            System.Diagnostics.Debug.WriteLine(test);
+            return null;
+        }
+        */
+
+        /// <summary>
+        /// Gets all roles.
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("role:modify")]  // provjera permisija, najbolje staviti ispod authorize-a zbog performansi (ako token ne valja onda mi se ne isplati provjeravati permisije)
         [HttpGet]
         public async Task<RolesResponse> GetRoles([FromQuery] BasicRequest request, [FromQuery(Name = "userId")] Guid userId)
         {
@@ -43,6 +70,11 @@ namespace NSI.REST.Controllers
             };
         }
 
+        /// <summary>
+        /// Save new role.
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("role:modify")]
         [HttpPost]
         public BaseResponse<Role> SaveRole(NameRequest request)
         {
@@ -64,6 +96,11 @@ namespace NSI.REST.Controllers
             };
         }
 
+        /// <summary>
+        /// Assign existing role to existing user.
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("role:modify")]
         [HttpPost("user")]
         public BaseResponse<UserRole> SaveRoleToUser(UserRoleRequest request)
         {
@@ -77,6 +114,8 @@ namespace NSI.REST.Controllers
                 };
             }
 
+            _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
+
             return new BaseResponse<UserRole>()
             {
                 Data = _rolesManipulation.SaveRoleToUser(request.RoleId, request.UserId),
@@ -85,6 +124,11 @@ namespace NSI.REST.Controllers
             };
         }
 
+        /// <summary>
+        /// Remove existing role from existing user.
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("role:modify")]
         [HttpDelete("user")]
         public BaseDeleteResponse RemoveRoleFromUser([FromQuery] UserRoleRequest request)
         {
@@ -96,6 +140,8 @@ namespace NSI.REST.Controllers
                     Success = ResponseStatus.Failed
                 };
             }
+            
+            _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
 
             return new BaseDeleteResponse()
             {

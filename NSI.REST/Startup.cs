@@ -27,6 +27,7 @@ using NSI.REST.Middlewares;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using NSI.REST.Filters;
 
 namespace NSI.REST
 {
@@ -96,6 +97,14 @@ namespace NSI.REST
 
             // Proxy 
             RegisterProxies(services);
+
+            // Filters
+            RegisterFilters(services);
+        }
+
+        private void RegisterFilters(IServiceCollection services)
+        {
+            services.AddScoped<CacheCheck>();
         }
 
         private void RegisterValidators(IServiceCollection services)
@@ -111,6 +120,7 @@ namespace NSI.REST
             services.AddTransient<IRequestsManipulation, RequestsManipulation>();
             services.AddTransient<IUsersManipulation, UsersManipulation>();
             services.AddTransient<IAuthManipulation, AuthManipulation>();
+            services.AddTransient<IUserPermissionManipulation, UserPermissionManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
@@ -121,6 +131,7 @@ namespace NSI.REST
             services.AddTransient<IRequestsRepository, RequestsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IAuthRepository, AuthRepository>();
+            services.AddTransient<IUserPermissionRepository, UserPermissionRepository>();
         }
 
         private void RegisterProxies(IServiceCollection services)

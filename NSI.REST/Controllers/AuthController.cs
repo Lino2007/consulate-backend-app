@@ -4,10 +4,12 @@ using NSI.BusinessLogic.Interfaces;
 using NSI.Common.DataContracts.Base;
 using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
+using NSI.REST.Filters;
 using NSI.REST.Helpers;
 
 namespace NSI.REST.Controllers
 {
+    [ServiceFilter(typeof(CacheCheck))]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : Controller
@@ -23,6 +25,7 @@ namespace NSI.REST.Controllers
         /// Gets user information by email.
         /// </summary>
         [Authorize]
+        [PermissionCheck("profile:view")]
         [HttpGet]
         public BaseResponse<User> GetUserInformation([FromQuery(Name = "email")] string email)
         {

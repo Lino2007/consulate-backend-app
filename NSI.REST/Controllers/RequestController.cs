@@ -5,10 +5,12 @@ using NSI.Common.DataContracts.Base;
 using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
 using NSI.DataContracts.Request;
+using NSI.REST.Filters;
 using NSI.REST.Helpers;
 
 namespace NSI.REST.Controllers
 {
+    [ServiceFilter(typeof(CacheCheck))]
     [ApiController]
     [Route("api/[controller]")]
     public class RequestController : Controller
@@ -22,7 +24,11 @@ namespace NSI.REST.Controllers
             _usersManipulation = usersManipulation;
         }
 
+        /// <summary>
+        /// Save new request.
+        /// </summary>
         [Authorize]
+        [PermissionCheck("request:create")]
         [HttpPost]
         public BaseResponse<Request> SaveRequest(DocumentRequest request)
         {
