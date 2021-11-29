@@ -9,6 +9,8 @@ namespace NSI.Repository.Interfaces
     {
         Task<IList<Role>> GetRolesAsync(Guid userId);
 
+        Role GetRoleByUserId(Guid userId);
+
         Role SaveRole(Role role);
 
         UserRole SaveRoleToUser(UserRole userRole);

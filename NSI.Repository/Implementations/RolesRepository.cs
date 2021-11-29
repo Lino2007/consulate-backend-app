@@ -30,6 +30,13 @@ namespace NSI.Repository.Implementations
                 .ToListAsync();
         }
 
+        public Role GetRoleByUserId(Guid userId) 
+        {
+
+            UserRole userRole = _context.UserRole.FirstOrDefault(u => u.UserId.Equals(userId));
+            return _context.Role.FirstOrDefault(r => r.Id.Equals(userRole.RoleId));
+        }
+
         public Role SaveRole(Role role)
         {
             Role savedRole = _context.Role.Add(role).Entity;

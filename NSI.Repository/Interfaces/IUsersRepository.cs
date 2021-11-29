@@ -5,5 +5,7 @@ namespace NSI.Repository.Interfaces
     public interface IUsersRepository
     {
         User GetByEmail(string email);
+
+        User SaveUser(User user);
     }
 }

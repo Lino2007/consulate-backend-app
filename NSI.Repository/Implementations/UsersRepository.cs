@@ -17,5 +17,20 @@ namespace NSI.Repository.Implementations
         {
             return _context.User.First(u => u.Email.Equals(email));
         }
+
+        public User SaveUser(User user)
+        {
+            User savedUser = _context.User.Add(user).Entity;
+
+            Role userRole = _context.Role.FirstOrDefault(r => r.Name.Equals("User"));
+
+            UserRole ur = new UserRole(savedUser.Id, userRole.Id);
+
+            UserRole ur2 = _context.UserRole.Add(ur).Entity;
+
+            _context.SaveChanges();
+
+            return savedUser;
+        }
     }
 }
