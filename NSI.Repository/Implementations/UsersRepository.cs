@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 
@@ -31,6 +35,32 @@ namespace NSI.Repository.Implementations
             _context.SaveChanges();
 
             return savedUser;
+        }
+
+        public ResponseStatus RemoveUser(string email)
+        {
+            User user = _context.User.FirstOrDefault(u => u.Email.Equals(email)); 
+
+            if (user != null)
+            {
+                UserRole userRole = _context.UserRole.FirstOrDefault(ur => ur.UserId.Equals(user.Id));
+                _context.User.Remove(user);
+                _context.UserRole.Remove(userRole);
+                _context.SaveChanges();
+                return ResponseStatus.Succeeded;
+            }
+            else
+            {
+                return ResponseStatus.Failed;
+            }
+        }
+
+        public async Task<IList<User>> GetUsersAsync()
+        {
+            return await _context.UserRole
+                .Where(ur => ur.Role.Name.Equals("User"))
+                .Select(ur => ur.User)
+                .ToListAsync();
         }
     }
 }

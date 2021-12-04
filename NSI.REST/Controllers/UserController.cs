@@ -7,6 +7,8 @@ using NSI.REST.Helpers;
 using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Request;
 using Microsoft.AspNetCore.Authorization;
+using NSI.DataContracts.Response;
+using System.Threading.Tasks;
 
 namespace NSI.REST.Controllers
 {
@@ -85,5 +87,55 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
+
+        /// <summary>
+        /// Delete current user profile.
+        /// </summary>
+        [Authorize]
+        [HttpDelete]
+        public BaseDeleteResponse RemoveUser([FromQuery(Name = "email")] string email)
+        {
+            if (!ModelState.IsValid || email == null || !new EmailAddressAttribute().IsValid(email))
+            {
+                return new BaseDeleteResponse()
+                {
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new BaseDeleteResponse()
+            {
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = _usersManipulation.RemoveUser(email)
+            };
+        }
+
+        /// <summary>
+        /// Get all population.
+        /// </summary>
+        [Authorize]
+        [HttpGet]
+        [Route("users")]
+        public async Task<UserResponse> GetUsers([FromQuery] BasicRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new UserResponse()
+                {
+                    Data = null,
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new UserResponse()
+            {
+                Data = await _usersManipulation.GetUsers(request.Paging, request.SortCriteria, request.FilterCriteria),
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = ResponseStatus.Succeeded
+            };
+        }
+
     }
 }

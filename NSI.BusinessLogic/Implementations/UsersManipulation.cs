@@ -3,6 +3,11 @@ using NSI.DataContracts.Models;
 using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
 using NSI.Common.DataContracts.Enumerations;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using NSI.Common.Collation;
+using System.Linq;
+using NSI.Common.Extensions;
 
 namespace NSI.BusinessLogic.Implementations
 {
@@ -31,6 +36,29 @@ namespace NSI.BusinessLogic.Implementations
             User newUser = new User(userRequest.FirstName, userRequest.LastName, g, userRequest.Email, userRequest.Username, userRequest.PlaceOfBirth, userRequest.DateOfBirth, userRequest.Country);
 
             return _usersRepository.SaveUser(newUser);
+        }
+
+        public ResponseStatus RemoveUser(string email)
+        {
+            var result = _usersRepository.RemoveUser(email);
+
+            if (result == null) {
+                return ResponseStatus.Failed;
+            }
+
+            return result;
+        }
+
+        public async Task<IList<User>> GetUsers(Paging paging, IList<SortCriteria> sortCriteria, IList<FilterCriteria> filterCriteria)
+        {
+            var results = await _usersRepository.GetUsersAsync();
+
+            if (paging != null)
+            {
+                results = results.AsQueryable().DoPaging(paging).ToList();
+            }
+
+            return results;
         }
     }
 }

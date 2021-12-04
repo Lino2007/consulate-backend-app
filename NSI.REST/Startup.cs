@@ -100,6 +100,8 @@ namespace NSI.REST
 
             // Filters
             RegisterFilters(services);
+
+            services.AddCors();
         }
 
         private void RegisterFilters(IServiceCollection services)
@@ -169,6 +171,8 @@ namespace NSI.REST
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
         }
     }
 }
