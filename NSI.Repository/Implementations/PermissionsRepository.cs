@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 using System.Collections.Generic;
@@ -65,6 +66,16 @@ namespace NSI.Repository.Implementations
             {
                 return 0;
             }
+        }
+
+        public async Task<IList<Permission>> GetPermissionsByUserId(Guid id)
+        {
+            var roleName = _context.UserRole
+                .Where(r => r.UserId.Equals(id))
+                .Select(r => r.Role.Name)
+                .First();
+
+            return await GetPermissionsAsync(roleName);
         }
 
         private RolePermission FindRolePermission(RolePermission rolePermission)

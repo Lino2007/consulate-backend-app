@@ -16,5 +16,7 @@ namespace NSI.BusinessLogic.Interfaces
         RolePermission SavePermissionToRole(Guid permissionId, Guid roleId);
 
         ResponseStatus RemovePermissionFromRole(Guid permissionId, Guid roleId);
+        
+        Task<IList<Permission>> GetPermissionsByUserId(Guid id);
     }
 }

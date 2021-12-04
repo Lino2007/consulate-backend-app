@@ -21,10 +21,13 @@ namespace NSI.REST.Controllers
 
         private readonly IUsersManipulation _usersManipulation;
 
-        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation)
+        private readonly IPermissionsManipulation _permissionsManipulation;
+
+        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation, IPermissionsManipulation permissionsManipulation)
         {
             _authManipulation = authManipulation;
             _usersManipulation = usersManipulation;
+            _permissionsManipulation = permissionsManipulation;
         }
 
         /// <summary>
@@ -136,6 +139,30 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
+        
+        /// <summary>
+        /// Gets all permissions from user.
+        /// </summary>
+        [Authorize]
+        [HttpGet("permission")]
+        public async Task<PermissionsResponse> GetPermissionsByUserId()
+        {
+            if (!ModelState.IsValid)
+            {
+                return new PermissionsResponse()
+                {
+                    Data = null,
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
 
+            return new PermissionsResponse()
+            {
+                Data = await _permissionsManipulation.GetPermissionsByUserId(_usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id),
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = ResponseStatus.Succeeded
+            };
+        }
     }
 }

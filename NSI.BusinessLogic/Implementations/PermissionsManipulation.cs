@@ -46,5 +46,10 @@ namespace NSI.BusinessLogic.Implementations
         {
             return (ResponseStatus) _permissionsRepository.RemovePermissionFromRole(new RolePermission(roleId, permissionId));
         }
+
+        public async Task<IList<Permission>> GetPermissionsByUserId(Guid id)
+        {
+            return await _permissionsRepository.GetPermissionsByUserId(id);
+        }
     }
 }

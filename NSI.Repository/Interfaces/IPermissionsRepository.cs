@@ -1,4 +1,5 @@
-﻿using NSI.DataContracts.Models;
+﻿using System;
+using NSI.DataContracts.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,7 @@ namespace NSI.Repository.Interfaces
         RolePermission SavePermissionToRole(RolePermission rolePermission);
 
         int RemovePermissionFromRole(RolePermission rolePermission);
+        
+        Task<IList<Permission>> GetPermissionsByUserId(Guid id);
     }
 }
