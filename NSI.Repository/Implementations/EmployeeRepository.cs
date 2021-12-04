@@ -26,7 +26,21 @@ namespace NSI.Repository.Implementations
                     employees.Add(user);
                 }
             }
+
             return employees;
+        }
+
+        public User SaveEmployee(User newEmployee)
+        {
+            var savedUser = _context.User.Add(newEmployee).Entity;
+            var roleEmployee = _context.Role.FirstOrDefault(r => r.Name.Equals("Employee"));
+            if (roleEmployee != null)
+            {
+                var userRole = new UserRole(savedUser.Id, roleEmployee.Id);
+                var savedUserRole = _context.UserRole.Add(userRole).Entity;
+            }
+            _context.SaveChanges();
+            return savedUser;
         }
     }
 }

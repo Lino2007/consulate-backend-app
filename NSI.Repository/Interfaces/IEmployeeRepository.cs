@@ -6,5 +6,7 @@ namespace NSI.Repository.Interfaces
     public interface IEmployeeRepository
     {
         List<User> GetAllEmployees();
+
+        User SaveEmployee(User employee);
     }
 }
