@@ -38,5 +38,10 @@ namespace NSI.BusinessLogic.Implementations
             var response = _employeeRepository.DeleteEmployee(email);
             return response;
         }
+
+        public User UpdateEmployee(string mail, UpdateEmployeeRequest newEmployeeRequest)
+        {
+            return _employeeRepository.UpdateEmployee(mail, newEmployeeRequest);
+        }
     }
 }

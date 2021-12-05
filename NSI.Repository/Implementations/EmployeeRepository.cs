@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
+using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
 
 namespace NSI.Repository.Implementations
@@ -33,16 +34,16 @@ namespace NSI.Repository.Implementations
 
         public User SaveEmployee(User newEmployee)
         {
-            var savedUser = _context.User.Add(newEmployee).Entity;
+            var savedEmployee = _context.User.Add(newEmployee).Entity;
             var roleEmployee = _context.Role.FirstOrDefault(r => r.Name.Equals("Employee"));
             if (roleEmployee != null)
             {
-                var userRole = new UserRole(savedUser.Id, roleEmployee.Id);
-                var savedUserRole = _context.UserRole.Add(userRole).Entity;
+                var userRole = new UserRole(savedEmployee.Id, roleEmployee.Id);
+                var savedEmployeeRole = _context.UserRole.Add(userRole).Entity;
             }
 
             _context.SaveChanges();
-            return savedUser;
+            return savedEmployee;
         }
 
         public ResponseStatus DeleteEmployee(string email)
@@ -62,6 +63,31 @@ namespace NSI.Repository.Implementations
 
             _context.SaveChanges();
             return ResponseStatus.Succeeded;
+        }
+
+        public User UpdateEmployee(string mail, UpdateEmployeeRequest employeeRequest)
+        {
+            var employee = _context.User.FirstOrDefault(emp => emp.Email == mail);
+            var employeeWithSameUsername =
+                _context.User.FirstOrDefault(emp => emp.Username == employeeRequest.Username);
+            var usernameAlreadyExists = employeeWithSameUsername != null;
+            if (employee != null && !usernameAlreadyExists)
+            {
+                employee.FirstName = employeeRequest.FirstName;
+                employee.LastName = employeeRequest.LastName;
+                employee.Username = employeeRequest.Username;
+                employee.DateOfBirth = employeeRequest.DateOfBirth;
+                employee.PlaceOfBirth = employeeRequest.PlaceOfBirth;
+                employee.Country = employeeRequest.Country;
+                employee.Gender = employeeRequest.Gender == "Male"
+                    ? Common.Enumerations.Gender.Male
+                    : Common.Enumerations.Gender.Female;
+                var updatedEmployee = _context.User.Update(employee).Entity;
+                _context.SaveChanges();
+                return updatedEmployee;
+            }
+
+            return null;
         }
     }
 }

@@ -12,5 +12,7 @@ namespace NSI.BusinessLogic.Interfaces
         User SaveEmployee(NewEmployeeRequest newEmployeeRequest);
         
         ResponseStatus DeleteEmployee(string email);
+        
+        User UpdateEmployee(string mail, UpdateEmployeeRequest newEmployeeRequest);
     }
 }
