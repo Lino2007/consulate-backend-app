@@ -8,7 +8,7 @@ namespace NSI.Common.Enumerations
         None, RoleModify, PerModify,
         EmpCreate, EmpDelete, EmpUpdate,
         UsrDelete, DocCreate, DocView,
-        ReqView, ReqCreate, ProView
+        ReqView, ReqCreate, ProView, EmpView
     }
 
     public static class PermissionEnumExtension {
@@ -16,7 +16,8 @@ namespace NSI.Common.Enumerations
         private static readonly List<string> enumNames = new List<string>
         {
             "role:modify", "permission:modify", "employee:create", "employee:delete", "employee:update",
-            "user:delete", "document:create", "document:view", "request:view", "request:create", "profile:view"
+            "user:delete", "document:create", "document:view", "request:view", "request:create", "profile:view", 
+            "employee:view"
         };
 
         public static PermissionEnum GetEnumByPermissionName(string permissionName)

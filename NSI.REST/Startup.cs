@@ -122,6 +122,7 @@ namespace NSI.REST
             services.AddTransient<IRequestsManipulation, RequestsManipulation>();
             services.AddTransient<IUsersManipulation, UsersManipulation>();
             services.AddTransient<IAuthManipulation, AuthManipulation>();
+            services.AddTransient<IEmployeeManipulation, EmployeeManipulation>();
             services.AddTransient<IUserPermissionManipulation, UserPermissionManipulation>();
         }
 
@@ -133,6 +134,7 @@ namespace NSI.REST
             services.AddTransient<IRequestsRepository, RequestsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IAuthRepository, AuthRepository>();
+            services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddTransient<IUserPermissionRepository, UserPermissionRepository>();
         }
 
