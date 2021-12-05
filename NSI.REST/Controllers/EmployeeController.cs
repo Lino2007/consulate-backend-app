@@ -57,19 +57,9 @@ namespace NSI.REST.Controllers
         [HttpPost]
         public BaseResponse<User> SaveEmployee(NewEmployeeRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return new BaseResponse<User>
-                {
-                    Data = null,
-                    Error = ValidationHelper.ToErrorResponse(ModelState),
-                    Success = ResponseStatus.Failed
-                };
-            }
-
-            if (request.FirstName == null || request.LastName == null || request.Username == null ||
-                !new EmailAddressAttribute().IsValid(request.Email) || request.Email == null ||
-                request.PlaceOfBirth == null || request.Country == null)
+            if (!ModelState.IsValid || request.FirstName == null || request.LastName == null ||
+                request.Username == null || !new EmailAddressAttribute().IsValid(request.Email) ||
+                request.Email == null || request.PlaceOfBirth == null || request.Country == null)
             {
                 return new BaseResponse<User>
                 {
@@ -88,34 +78,10 @@ namespace NSI.REST.Controllers
         }
 
         /// <summary>
-        /// Deletes employee by email (admin only).
-        /// </summary>
-        [Authorize]
-        [PermissionCheck("employee:delete")]
-        [HttpDelete("{email}")]
-        public BaseDeleteResponse DeleteEmployee(string email)
-        {
-            if (!ModelState.IsValid || email == null || !new EmailAddressAttribute().IsValid(email))
-            {
-                return new BaseDeleteResponse()
-                {
-                    Error = ValidationHelper.ToErrorResponse(ModelState),
-                    Success = ResponseStatus.Failed
-                };
-            }
-
-            return new BaseDeleteResponse()
-            {
-                Error = ValidationHelper.ToErrorResponse(ModelState),
-                Success = _employeeManipulation.DeleteEmployee(email)
-            };
-        }
-
-        /// <summary>
         /// Updates employee (admin only).
         /// </summary>
-        [Authorize]
-        [PermissionCheck("employee:update")]
+        // [Authorize]
+        // [PermissionCheck("employee:update")]
         [HttpPut("{email}")]
         public BaseResponse<User> UpdateEmployee(UpdateEmployeeRequest request, string email)
         {
@@ -136,6 +102,30 @@ namespace NSI.REST.Controllers
                 Data = _employeeManipulation.UpdateEmployee(email, request),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
+            };
+        }
+
+        /// <summary>
+        /// Deletes employee by email (admin only).
+        /// </summary>
+        // [Authorize]
+        // [PermissionCheck("employee:delete")]
+        [HttpDelete("{email}")]
+        public BaseDeleteResponse DeleteEmployee(string email)
+        {
+            if (!ModelState.IsValid || email == null || !new EmailAddressAttribute().IsValid(email))
+            {
+                return new BaseDeleteResponse
+                {
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new BaseDeleteResponse
+            {
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = _employeeManipulation.DeleteEmployee(email)
             };
         }
     }
