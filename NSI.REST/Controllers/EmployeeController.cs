@@ -80,8 +80,8 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Updates employee (admin only).
         /// </summary>
-        // [Authorize]
-        // [PermissionCheck("employee:update")]
+        [Authorize]
+        [PermissionCheck("employee:update")]
         [HttpPut("{email}")]
         public BaseResponse<User> UpdateEmployee(UpdateEmployeeRequest request, string email)
         {
@@ -108,8 +108,8 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Deletes employee by email (admin only).
         /// </summary>
-        // [Authorize]
-        // [PermissionCheck("employee:delete")]
+        [Authorize]
+        [PermissionCheck("employee:delete")]
         [HttpDelete("{email}")]
         public BaseDeleteResponse DeleteEmployee(string email)
         {

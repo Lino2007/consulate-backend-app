@@ -87,7 +87,7 @@ namespace NSI.Repository.Implementations
                 return updatedEmployee;
             }
 
-            return employee;
+            return null;
         }
     }
 }
