@@ -86,5 +86,29 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
+
+        /// <summary>
+        /// Delete employee by email (admin only).
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("employee:delete")]
+        [HttpDelete]
+        public BaseDeleteResponse DeleteEmployee([FromQuery(Name = "email")] string email)
+        {
+            if (!ModelState.IsValid || email == null || !new EmailAddressAttribute().IsValid(email))
+            {
+                return new BaseDeleteResponse()
+                {
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new BaseDeleteResponse()
+            {
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = _employeeManipulation.DeleteEmployee(email)
+            };
+        }
     }
 }

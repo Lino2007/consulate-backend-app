@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 
@@ -39,8 +40,28 @@ namespace NSI.Repository.Implementations
                 var userRole = new UserRole(savedUser.Id, roleEmployee.Id);
                 var savedUserRole = _context.UserRole.Add(userRole).Entity;
             }
+
             _context.SaveChanges();
             return savedUser;
+        }
+
+        public ResponseStatus DeleteEmployee(string email)
+        {
+            var employee = _context.User.FirstOrDefault(u => u.Email.Equals(email));
+            if (employee == null)
+            {
+                return ResponseStatus.Failed;
+            }
+
+            var userRole = _context.UserRole.FirstOrDefault(ur => ur.UserId.Equals(employee.Id));
+            _context.User.Remove(employee);
+            if (userRole != null)
+            {
+                _context.UserRole.Remove(userRole);
+            }
+
+            _context.SaveChanges();
+            return ResponseStatus.Succeeded;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NSI.BusinessLogic.Interfaces;
+using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
 using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
@@ -30,6 +31,12 @@ namespace NSI.BusinessLogic.Implementations
                 newEmployeeRequest.DateOfBirth, newEmployeeRequest.Country);
 
             return _employeeRepository.SaveEmployee(newEmployee);
+        }
+
+        public ResponseStatus DeleteEmployee(string email)
+        {
+            var response = _employeeRepository.DeleteEmployee(email);
+            return response;
         }
     }
 }
