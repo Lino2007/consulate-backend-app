@@ -25,7 +25,7 @@ namespace NSI.BusinessLogic.Implementations
             return _usersRepository.GetByEmail(email);
         }
 
-        public User saveUser(NewUserRequest userRequest)
+        public User SaveUser(NewUserRequest userRequest)
         {
             Common.Enumerations.Gender g = Common.Enumerations.Gender.Male;
 

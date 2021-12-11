@@ -90,7 +90,7 @@ namespace NSI.REST.Controllers
 
             return new BaseResponse<User>()
             {
-                Data = _usersManipulation.saveUser(request),
+                Data = _usersManipulation.SaveUser(request),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
             };

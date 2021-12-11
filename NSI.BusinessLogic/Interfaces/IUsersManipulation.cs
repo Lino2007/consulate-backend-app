@@ -11,7 +11,7 @@ namespace NSI.BusinessLogic.Interfaces
     {
         User GetByEmail(string email);
 
-        User saveUser(NewUserRequest userRequest);
+        User SaveUser(NewUserRequest userRequest);
 
         ResponseStatus RemoveUser(string email);
 
