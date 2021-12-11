@@ -154,6 +154,7 @@ namespace NSI.REST
             services.AddTransient<IAuthManipulation, AuthManipulation>();
             services.AddTransient<IEmployeeManipulation, EmployeeManipulation>();
             services.AddTransient<IUserPermissionManipulation, UserPermissionManipulation>();
+            services.AddTransient<IDocumentsManipulation, DocumentsManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
@@ -166,6 +167,7 @@ namespace NSI.REST
             services.AddTransient<IAuthRepository, AuthRepository>();
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddTransient<IUserPermissionRepository, UserPermissionRepository>();
+            services.AddTransient<IDocumentsRepository, DocumentsRepository>();
         }
 
         private void RegisterProxies(IServiceCollection services)

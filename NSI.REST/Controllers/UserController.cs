@@ -9,9 +9,11 @@ using NSI.DataContracts.Request;
 using Microsoft.AspNetCore.Authorization;
 using NSI.DataContracts.Response;
 using System.Threading.Tasks;
+using NSI.REST.Filters;
 
 namespace NSI.REST.Controllers
 {
+    [ServiceFilter(typeof(CacheCheck))]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : Controller
@@ -22,16 +24,19 @@ namespace NSI.REST.Controllers
         private readonly IUsersManipulation _usersManipulation;
 
         private readonly IPermissionsManipulation _permissionsManipulation;
+        
+        private readonly IDocumentsManipulation _documentsManipulation;
 
-        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation, IPermissionsManipulation permissionsManipulation)
+        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation, IPermissionsManipulation permissionsManipulation, IDocumentsManipulation documentsManipulation)
         {
             _authManipulation = authManipulation;
             _usersManipulation = usersManipulation;
             _permissionsManipulation = permissionsManipulation;
+            _documentsManipulation = documentsManipulation;
         }
 
         /// <summary>
-        /// Get Role from loged user by email.
+        /// Get Role from logged user by email.
         /// </summary>
         [HttpGet]
         public BaseResponse<Role> GetUserRoleFromEmail([FromQuery(Name = "email")] string email)
@@ -160,6 +165,32 @@ namespace NSI.REST.Controllers
             return new PermissionsResponse()
             {
                 Data = await _permissionsManipulation.GetPermissionsByUserId(_usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id),
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = ResponseStatus.Succeeded
+            };
+        }
+        
+        /// <summary>
+        /// Gets all documents from user.
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("document:view")]
+        [HttpGet("document")]
+        public async Task<DocumentResponse> GetDocumentsByUserIdAndType([FromQuery(Name = "type")] string type)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new DocumentResponse()
+                {
+                    Data = null,
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new DocumentResponse()
+            {
+                Data = await _documentsManipulation.GetDocumentsByUserIdAndType(_usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id, type),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
             };
