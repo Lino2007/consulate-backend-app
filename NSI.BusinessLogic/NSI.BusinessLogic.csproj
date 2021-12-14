@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NSI.Cache\NSI.Cache.csproj" />
     <ProjectReference Include="..\NSI.Common\NSI.Common.csproj" />
     <ProjectReference Include="..\NSI.DataContracts\NSI.DataContracts.csproj" />
     <ProjectReference Include="..\NSI.Repository\NSI.Repository.csproj" />

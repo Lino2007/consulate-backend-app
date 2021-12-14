@@ -60,5 +60,10 @@ namespace NSI.BusinessLogic.Implementations
 
             return results;
         }
+
+        public async Task<IList<User>> GetAllPerson()
+        {
+            return await _usersRepository.GetAllPersonAsync();
+        }
     }
 }

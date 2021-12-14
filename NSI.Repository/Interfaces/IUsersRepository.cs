@@ -14,5 +14,6 @@ namespace NSI.Repository.Interfaces
         ResponseStatus RemoveUser(string email);
 
         Task<IList<User>> GetUsersAsync();
+        Task<IList<User>> GetAllPersonAsync();
     }
 }

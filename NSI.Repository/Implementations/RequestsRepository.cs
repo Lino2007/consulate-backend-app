@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NSI.Common.Enumerations;
 using NSI.DataContracts.Models;
 using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
@@ -27,10 +28,10 @@ namespace NSI.Repository.Implementations
             return await _context.Request.ToListAsync();
         }
         
-        public async Task<IList<Request>> GetEmployeeRequestsAsync(string employeeId)
+        public IQueryable<Request> GetEmployeeRequestsAsync(string employeeId)
         {
-            return await _context.Request.OrderByDescending(d => d.DateCreated).
-                   Where(req => req.EmployeeId.ToString().Equals(employeeId)).ToListAsync();
+            return _context.Request.OrderByDescending(d => d.DateCreated).
+                   Where(req => req.EmployeeId.ToString().Equals(employeeId));
         }
 
         public async Task<Request> UpdateRequestAsync(ReqItemRequest item)
@@ -53,6 +54,11 @@ namespace NSI.Repository.Implementations
             var savedRequest = _context.Request.Add(request).Entity;
             _context.SaveChanges();
             return savedRequest;
+        }
+
+        public IQueryable<Request> GetRequestQueryWithFilters()
+        {
+            return _context.Request.OrderByDescending(t => (t.State == RequestState.Pending) ? 0 : 1).ThenByDescending(d => d.DateCreated);
         }
     }
 }

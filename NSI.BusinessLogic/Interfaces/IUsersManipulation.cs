@@ -16,5 +16,7 @@ namespace NSI.BusinessLogic.Interfaces
         ResponseStatus RemoveUser(string email);
 
         Task<IList<User>> GetUsers(Paging paging, IList<SortCriteria> sortCriteria, IList<FilterCriteria> filterCriteria);
+
+        Task<IList<User>> GetAllPerson();
     }
 }

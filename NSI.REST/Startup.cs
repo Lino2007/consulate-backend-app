@@ -167,6 +167,8 @@ namespace NSI.REST
             services.AddTransient<IAuthRepository, AuthRepository>();
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddTransient<IUserPermissionRepository, UserPermissionRepository>();
+            services.AddTransient<IAttachmentRepository, AttachmentRepository>();
+            services.AddTransient<IDocumentRepository, DocumentRepository>();
             services.AddTransient<IDocumentsRepository, DocumentsRepository>();
         }
 

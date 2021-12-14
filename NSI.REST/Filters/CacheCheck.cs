@@ -5,6 +5,7 @@ using NSI.Common.Utilities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NSI.Common.Enumerations;
+using System.Linq;
 
 namespace NSI.REST.Filters
 {
@@ -12,17 +13,20 @@ namespace NSI.REST.Filters
     {
         private readonly ICacheProvider _cacheProvider;
         private readonly IUserPermissionManipulation _userPermissionManipulation;
+        private readonly IUsersManipulation _usersManipulation;
         private Dictionary<string, List<PermissionEnum>> userPermission = new Dictionary<string, List<PermissionEnum>>();
 
-        public CacheCheck(IUserPermissionManipulation userPermissionManipulation, ICacheProvider cacheProvider)
+        public CacheCheck(ICacheProvider cacheProvider, IUserPermissionManipulation userPermissionManipulation, IUsersManipulation usersManipulation)
         {
-            _userPermissionManipulation = userPermissionManipulation;
             _cacheProvider = cacheProvider;
+            _userPermissionManipulation = userPermissionManipulation;
+            _usersManipulation = usersManipulation;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var email = LoadEmailFromToken(context);
+            await LoadIdToMailMap();
             if (email != null)
             {
                 LoadPermissionsToCache();
@@ -31,11 +35,22 @@ namespace NSI.REST.Filters
             }
             await next();
         }
-    
+        private async Task LoadIdToMailMap()
+        {
+            var idToEmailMap = _cacheProvider.Get<Dictionary<string, string>>("idToMail");
+            if (idToEmailMap == null)
+            {
+                var users = (await _usersManipulation.GetAllPerson()).ToList();
+                _cacheProvider.Set("idToMail", users.ToDictionary(usr => usr.Id.ToString(), usr => usr.Email));
+            }
+        }
+
+
         private void LoadPermissionsToCache()
         {
-            var temp = _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission");
-            if (temp == null)
+            var usrPermission = _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission");
+
+            if (usrPermission == null)
             {
                 
                 this.userPermission = new Dictionary<string, List<PermissionEnum>>();
@@ -43,7 +58,7 @@ namespace NSI.REST.Filters
             }
             else
             {
-                this.userPermission = temp;
+                this.userPermission = usrPermission;
             }
         }
 

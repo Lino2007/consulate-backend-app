@@ -32,8 +32,8 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Save new request.
         /// </summary>
-        [Authorize]
-        [PermissionCheck("request:create")]
+        //[Authorize]
+        //[PermissionCheck("request:create")]
         [HttpPost]
         public BaseResponse<Request> SaveRequest(DocumentRequest request)
         {
@@ -60,11 +60,11 @@ namespace NSI.REST.Controllers
         }
 
         [HttpGet]
-        public async Task<ReqResponse> GetRequests([FromQuery]BasicRequest basicRequest) {
+        public async Task<ReqItemResponse> GetRequests([FromQuery]BasicRequest basicRequest) {
             
             if(!ModelState.IsValid)
             {
-                return new ReqResponse()
+                return new ReqItemResponse()
                 {
                     Data = null,
                     Error = ValidationHelper.ToErrorResponse(ModelState),
@@ -72,7 +72,7 @@ namespace NSI.REST.Controllers
                 };
             }
 
-            return new ReqResponse()
+            return new ReqItemResponse()
             {
                 Data = await _requestsManipulation.GetRequestsAsync(),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
@@ -80,12 +80,13 @@ namespace NSI.REST.Controllers
             };
         }
 
-        [HttpGet("employee/{id}")]
-        public async Task<ReqResponse> getRequestsByEmployeeId(string id)
+        [HttpGet("paging")]
+        public async Task<ReqItemListResponse> GetRequestsWithPaging([FromQuery] BasicRequest basicRequest)
         {
-            if (!ModelState.IsValid)
+
+            if (!ModelState.IsValid || basicRequest.Paging == null)
             {
-                return new ReqResponse()
+                return new ReqItemListResponse()
                 {
                     Data = null,
                     Error = ValidationHelper.ToErrorResponse(ModelState),
@@ -93,21 +94,63 @@ namespace NSI.REST.Controllers
                 };
             }
 
-            var requests = await _requestsManipulation.GetEmployeeRequestsAsync(id);
-            return new ReqResponse()
+            if (basicRequest.Paging.RecordsPerPage < 0)
             {
-                Data = requests,
+                basicRequest.Paging.RecordsPerPage = 5;
+            }
+
+            if (basicRequest.Paging.Page < 0)
+            {
+                basicRequest.Paging.Page = 0;
+            }
+
+            return new ReqItemListResponse()
+            {
+                Paging = basicRequest.Paging,
+                Data = await _requestsManipulation.GetRequestPage(basicRequest.Paging),
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = ResponseStatus.Succeeded
+            };
+        }
+
+        [HttpGet("employee/{id}")]
+        public async Task<ReqItemListResponse> getRequestsByEmployeeId(string id, [FromQuery] BasicRequest basicRequest)
+        {
+            if (!ModelState.IsValid || basicRequest.Paging == null)
+            {
+                return new ReqItemListResponse()
+                {
+                    Data = null,
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            if (basicRequest.Paging.RecordsPerPage < 0)
+            {
+                basicRequest.Paging.RecordsPerPage = 5;
+            }
+
+            if (basicRequest.Paging.Page < 0)
+            {
+                basicRequest.Paging.Page = 0;
+            }
+
+            return new ReqItemListResponse()
+            {
+                Paging = basicRequest.Paging,
+                Data = await _requestsManipulation.GetEmployeeRequestsAsync(id, basicRequest.Paging),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
             };
         }
 
         [HttpPut]
-        public async Task<ReqResponse> updateRequest(ReqItemRequest req)
+        public async Task<ReqItemResponse> updateRequest(ReqItemRequest req)
         {
             if (!ModelState.IsValid)
             {
-                return new ReqResponse()
+                return new ReqItemResponse()
                 {
                     Data = null,
                     Error = ValidationHelper.ToErrorResponse(ModelState),
@@ -120,7 +163,7 @@ namespace NSI.REST.Controllers
             {
                 Error newErr = new Error();
                 newErr.Message = $"Request with id {req.id} does not exist";
-                return new ReqResponse()
+                return new ReqItemResponse()
                 {
                     Data = null,
                     Error = newErr,
@@ -128,7 +171,7 @@ namespace NSI.REST.Controllers
                 };
             }
 
-            return new ReqResponse()
+            return new ReqItemResponse()
             {
                 Data = new List<Request> () {request} ,
                 Error = ValidationHelper.ToErrorResponse(ModelState),

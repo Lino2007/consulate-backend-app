@@ -5,7 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace NSI.Common.Extensions
 {
@@ -42,6 +43,32 @@ namespace NSI.Common.Extensions
                 source.OrderBy(p => 0).Skip(skipElements).Take(takeElements);
         }
 
+        /// <summary>
+        /// Pages the source according to Paging details provided asynchronously
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">Source IQueriable for which Paging should be added</param>
+        /// <param name="paging">Paging contract. Must have RecordsPerPage and Page.</param>
+        /// <returns><see cref="IQueryable<typeparamref name="T"/>"/></returns>
+        public static async Task<IQueryable<T>> DoPagingAsync<T>(this IQueryable<T> source, Paging paging)
+        {
+            if (paging == null)
+            {
+                return source;
+            }
+
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
+            int skipElements, takeElements;
+            PagingHelper.CalculatePagingDetails(paging, await source.CountAsync(), out skipElements, out takeElements);
+
+            return source is IOrderedQueryable ?
+                source.Skip(skipElements).Take(takeElements) :
+                source.OrderBy(p => 0).Skip(skipElements).Take(takeElements);
+        }
         #endregion
 
         #region Sorting methods

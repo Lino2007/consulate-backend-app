@@ -62,5 +62,10 @@ namespace NSI.Repository.Implementations
                 .Select(ur => ur.User)
                 .ToListAsync();
         }
+
+        public async Task<IList<User>> GetAllPersonAsync()
+        {
+            return await _context.User.ToListAsync();
+        }
     }
 }
