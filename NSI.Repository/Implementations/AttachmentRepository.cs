@@ -1,8 +1,6 @@
 ﻿using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +19,7 @@ namespace NSI.Repository.Implementations
         /// <summary>
         /// The method that returns all attachments for list of requests.
         /// </summary>
-        public async Task<IList<Attachment>> getAttachmentsByRequests(List<Request> RequestList)
+        public async Task<IList<Attachment>> GetAttachmentsByRequests(List<Request> RequestList)
         {
         
             if (RequestList == null || RequestList.Count == 0)
@@ -39,6 +37,21 @@ namespace NSI.Repository.Implementations
                                           { // attachment klasa ima DocumentType property (Type) koji nakon prvog querija bude null
                                             item.att.Type = item.dt;
                                             return item.att;  }).ToList(); 
+        }
+
+        public Attachment SaveAttachment(Attachment attachment)
+        {
+            Attachment savedAttachment = _context.Attachment.Add(attachment).Entity;
+            _context.SaveChanges();
+            return savedAttachment;
+        }
+
+        public Attachment UpdateAttachment(Attachment attachment)
+        {
+            Attachment savedAttachment = _context.Attachment.First(at => at.Id.Equals(attachment.Id));
+            savedAttachment.Url = attachment.Url;
+            _context.SaveChanges();
+            return savedAttachment;
         }
     }
 }
