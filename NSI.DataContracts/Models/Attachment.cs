@@ -21,6 +21,12 @@ namespace NSI.DataContracts.Models
 
         [ForeignKey("TypeId")]
         public DocumentType Type { get; set; }
+        
+        public Attachment(Guid requestId, Guid typeId)
+        {
+            RequestId = requestId;
+            TypeId = typeId;
+        }
 
         public Attachment(Guid requestId, Guid typeId, string url)
         {

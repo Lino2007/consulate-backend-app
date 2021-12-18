@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using NSI.BusinessLogic.Interfaces;
 using NSI.Common.Collation;
 using NSI.Common.Enumerations;
@@ -11,7 +12,6 @@ using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NSI.DataContracts.Dto;
-using Microsoft.Extensions.Caching.Memory;
 using NSI.Cache.Interfaces;
 
 namespace NSI.BusinessLogic.Implementations
@@ -21,15 +21,19 @@ namespace NSI.BusinessLogic.Implementations
         private readonly IRequestsRepository _requestsRepository;
         private readonly IAttachmentRepository _attachmentRepository;
         private readonly IDocumentRepository _documentRepository;
+        private readonly IDocumentTypesRepository _documentTypesRepository;
+        private readonly IFilesManipulation _filesManipulation;
         private readonly ICacheProvider _cacheProvider;
 
         public RequestsManipulation(IRequestsRepository requestsRepository, IAttachmentRepository attachmentRepository, 
-            IDocumentRepository documentRepository, ICacheProvider cacheProvider)
+            IDocumentRepository documentRepository, IDocumentTypesRepository documentTypesRepository, ICacheProvider cacheProvider, IFilesManipulation filesManipulation)
         {
             _requestsRepository = requestsRepository;
             _attachmentRepository = attachmentRepository;
             _documentRepository = documentRepository;
+            _documentTypesRepository = documentTypesRepository;
             _cacheProvider = cacheProvider;
+            _filesManipulation = filesManipulation;
         }
 
         public async Task<IList<Request>> GetRequestsAsync()
@@ -44,9 +48,19 @@ namespace NSI.BusinessLogic.Implementations
             return await CreateRequestItemDto(RequestList);
         }
 
-        public Request SaveRequest(Guid userId, string reason, RequestType type)
+        public async Task<Request> SaveRequest(Guid userId, string reason, RequestType type,  IEnumerable<IFormFile> files, string[] attachmentTypes)
         {
-            return _requestsRepository.SaveRequest(new Request(userId, reason, type));
+            Request savedRequest = _requestsRepository.SaveRequest(new Request(userId, reason, type));
+            int i = 0;
+            foreach (var file in files)
+            {
+                Attachment attachment = _attachmentRepository.SaveAttachment(new Attachment(savedRequest.Id, _documentTypesRepository.GetByName(attachmentTypes[i]).Id));
+                string url = await _filesManipulation.UploadFile(file, attachment.Id.ToString());
+                attachment.Url = url;
+                _attachmentRepository.UpdateAttachment(attachment);
+                i++;
+            }
+            return savedRequest;
         }
 
         public async Task<Request> UpdateRequestAsync(ReqItemRequest item)
@@ -64,7 +78,7 @@ namespace NSI.BusinessLogic.Implementations
         public async Task<IList<RequestItemDto>> CreateRequestItemDto(List<Request> RequestList)
         {
             var idToMailMap = _cacheProvider.Get<Dictionary<string, string>>("idToMail");
-            var AttachmentList = await (_attachmentRepository.getAttachmentsByRequests(RequestList));
+            var AttachmentList = await (_attachmentRepository.GetAttachmentsByRequests(RequestList));
             var DocumentList = await (_documentRepository.getDocumentsByRequests(RequestList));
            
             List<RequestItemDto> requestItemDtos = RequestList.Select(request =>

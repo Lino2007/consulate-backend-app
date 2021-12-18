@@ -155,6 +155,7 @@ namespace NSI.REST
             services.AddTransient<IEmployeeManipulation, EmployeeManipulation>();
             services.AddTransient<IUserPermissionManipulation, UserPermissionManipulation>();
             services.AddTransient<IDocumentsManipulation, DocumentsManipulation>();
+            services.AddTransient<IFilesManipulation, FilesManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
@@ -170,6 +171,7 @@ namespace NSI.REST
             services.AddTransient<IAttachmentRepository, AttachmentRepository>();
             services.AddTransient<IDocumentRepository, DocumentRepository>();
             services.AddTransient<IDocumentsRepository, DocumentsRepository>();
+            services.AddTransient<IDocumentTypesRepository, DocumentTypesRepository>();
         }
 
         private void RegisterProxies(IServiceCollection services)

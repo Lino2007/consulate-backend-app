@@ -35,7 +35,7 @@ namespace NSI.REST.Controllers
         //[Authorize]
         //[PermissionCheck("request:create")]
         [HttpPost]
-        public BaseResponse<Request> SaveRequest(DocumentRequest request)
+        public async Task<BaseResponse<Request>> SaveRequest([FromForm] DocumentRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -49,10 +49,12 @@ namespace NSI.REST.Controllers
 
             return new BaseResponse<Request>()
             {
-                Data = _requestsManipulation.SaveRequest(
+                Data = await _requestsManipulation.SaveRequest(
                     _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id,
                     request.Reason,
-                    request.Type
+                    request.Type,
+                    request.Attachments,
+                    request.AttachmentTypes
                 ),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
