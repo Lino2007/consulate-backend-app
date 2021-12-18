@@ -4,6 +4,6 @@ namespace NSI.Repository.Interfaces
 {
     public interface IDocumentTypesRepository
     {
-        public DocumentType GetByName(string name);
+        DocumentType GetByName(string name);
     }
 }

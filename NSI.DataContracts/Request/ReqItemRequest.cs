@@ -1,13 +1,11 @@
 ﻿using NSI.Common.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using NSI.Common.DataContracts.Base;
 
 namespace NSI.DataContracts.Request
 {
-    public class ReqItemRequest : BasicRequest
+    public class ReqItemRequest : BaseRequest
     {
-        public String id { get; set; }
+        public string Id { get; set; }
         public RequestState RequestState { get; set; }
     }
 }

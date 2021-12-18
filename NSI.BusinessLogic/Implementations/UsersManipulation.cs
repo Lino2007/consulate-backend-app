@@ -40,13 +40,7 @@ namespace NSI.BusinessLogic.Implementations
 
         public ResponseStatus RemoveUser(string email)
         {
-            var result = _usersRepository.RemoveUser(email);
-
-            if (result == null) {
-                return ResponseStatus.Failed;
-            }
-
-            return result;
+            return _usersRepository.RemoveUser(email);
         }
 
         public async Task<IList<User>> GetUsers(Paging paging, IList<SortCriteria> sortCriteria, IList<FilterCriteria> filterCriteria)

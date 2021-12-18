@@ -16,6 +16,22 @@ namespace NSI.Repository.Implementations
         {
             _context = context;
         }
+        
+        public Document SaveDocument(Document document)
+        {
+            Document savedDocument = _context.Document.Add(document).Entity;
+            _context.SaveChanges();
+            return savedDocument;
+        }
+        
+        public Document UpdateDocument(Document document)
+        {
+            Document oldDocument = _context.Document.First(d => d.Id.Equals(document.Id));
+            oldDocument.Url = document.Url;
+            oldDocument.Title = document.Title;
+            _context.SaveChanges();
+            return oldDocument;
+        }
 
         public async Task<IList<Document>> GetDocumentsByUserIdAndType(Guid id, string type)
         {

@@ -36,7 +36,7 @@ namespace NSI.Repository.Implementations
 
         public async Task<Request> UpdateRequestAsync(ReqItemRequest item)
         {
-            var request = await GetRequestAsync(item.id);
+            var request = await GetRequestAsync(item.Id);
             if (request != null)
             {
                 if (request.State == item.RequestState)

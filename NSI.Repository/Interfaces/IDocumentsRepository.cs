@@ -7,6 +7,8 @@ namespace NSI.Repository.Interfaces
 {
     public interface IDocumentsRepository
     {
+        Document SaveDocument(Document document);
+        Document UpdateDocument(Document document);
         Task<IList<Document>> GetDocumentsByUserIdAndType(Guid id, string type);
     }
 }

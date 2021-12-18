@@ -15,6 +15,16 @@ namespace NSI.BusinessLogic.Implementations
         {
             _documentsRepository = documentsRepository;
         }
+        
+        public Document SaveDocument(Guid requestId, Guid typeId, DateTime dateOfExpiration, string url, string title)
+        {
+            return _documentsRepository.SaveDocument(new Document(requestId, typeId, dateOfExpiration, url, title));
+        }
+
+        public Document UpdateDocument(Document document)
+        {
+            return _documentsRepository.UpdateDocument(document);
+        }
 
         public Task<IList<Document>> GetDocumentsByUserIdAndType(Guid id, string type)
         {

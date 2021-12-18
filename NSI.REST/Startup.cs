@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -115,6 +117,9 @@ namespace NSI.REST
 
             // Cache
             services.AddSingleton<ICacheProvider, InMemoryCacheProvider>();
+            
+            // PDF generator
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             // DB and Repositories
             RegisterRepositories(services);
@@ -155,6 +160,8 @@ namespace NSI.REST
             services.AddTransient<IEmployeeManipulation, EmployeeManipulation>();
             services.AddTransient<IUserPermissionManipulation, UserPermissionManipulation>();
             services.AddTransient<IDocumentsManipulation, DocumentsManipulation>();
+            services.AddTransient<IDocumentTypesManipulation, DocumentTypesManipulation>();
+            services.AddTransient<IPdfManipulation, PdfManipulation>();
             services.AddTransient<IFilesManipulation, FilesManipulation>();
         }
 
