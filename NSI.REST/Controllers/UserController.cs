@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 using NSI.DataContracts.Response;
 using System.Threading.Tasks;
 using NSI.REST.Filters;
+using NSI.Cache.Interfaces;
+using System.Collections.Generic;
+using NSI.Common.Enumerations;
 
 namespace NSI.REST.Controllers
 {
@@ -27,12 +30,15 @@ namespace NSI.REST.Controllers
         
         private readonly IDocumentsManipulation _documentsManipulation;
 
-        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation, IPermissionsManipulation permissionsManipulation, IDocumentsManipulation documentsManipulation)
+        private readonly ICacheProvider _cacheProvider;
+
+        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation, IPermissionsManipulation permissionsManipulation, IDocumentsManipulation documentsManipulation, ICacheProvider cacheProvider)
         {
             _authManipulation = authManipulation;
             _usersManipulation = usersManipulation;
             _permissionsManipulation = permissionsManipulation;
             _documentsManipulation = documentsManipulation;
+            _cacheProvider = cacheProvider;
         }
 
         /// <summary>
@@ -87,6 +93,11 @@ namespace NSI.REST.Controllers
                     Success = ResponseStatus.Failed
                 };
             }
+
+           if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null)
+           {
+                _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
+           }
 
             return new BaseResponse<User>()
             {
