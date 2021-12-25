@@ -56,16 +56,10 @@ namespace NSI.Repository.Implementations
                                 && rolePerm.RoleId == role.Id && rolePerm.PermissionId == perm.Id
                                 select new { perm.Name }).ToListAsync();
             var permissionList = new List<PermissionEnum>();
-            System.Diagnostics.Debug.WriteLine("*********");
-            System.Diagnostics.Debug.WriteLine(result.Count);
             foreach (var item in result)
             {
                 var permEnum = PermissionEnumExtension.GetEnumByPermissionName(item.Name);
                 permissionList.Add(permEnum);  
-            }
-            foreach (var item in permissionList)
-            {
-                System.Diagnostics.Debug.WriteLine(item);
             }
             return permissionList;
         }
