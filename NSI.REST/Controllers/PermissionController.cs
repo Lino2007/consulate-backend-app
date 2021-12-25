@@ -98,9 +98,10 @@ namespace NSI.REST.Controllers
                     Success = ResponseStatus.Failed
                 };
             }
-            
-            _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
-
+            if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null)
+            {
+                _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
+            }
             return new BaseResponse<RolePermission>()
             {
                 Data = _permissionsManipulation.SavePermissionToRole(request.PermissionId, request.RoleId),
@@ -125,8 +126,10 @@ namespace NSI.REST.Controllers
                     Success = ResponseStatus.Failed
                 };
             }
-            
-            _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
+            if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null)
+            {
+                _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
+            }
 
             return new BaseDeleteResponse()
             {
