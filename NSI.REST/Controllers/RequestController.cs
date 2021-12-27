@@ -1,6 +1,13 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using System.Drawing.Imaging;
 using NSI.BusinessLogic.Interfaces;
 using NSI.Common.DataContracts.Base;
 using NSI.Common.DataContracts.Enumerations;
@@ -9,11 +16,9 @@ using NSI.DataContracts.Request;
 using NSI.DataContracts.Response;
 using NSI.REST.Filters;
 using NSI.REST.Helpers;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using NSI.Common.Enumerations;
+using NSI.Common.Exceptions;
+using NSI.Common.Utilities;
 
 namespace NSI.REST.Controllers
 {
@@ -28,8 +33,12 @@ namespace NSI.REST.Controllers
         private readonly IDocumentsManipulation _documentsManipulation;
         private readonly IDocumentTypesManipulation _documentTypesManipulation;
         private readonly IFilesManipulation _filesManipulation;
+        private readonly string _redirectUrl;
 
-        public RequestController(IRequestsManipulation requestsManipulation, IUsersManipulation usersManipulation, IPdfManipulation pdfManipulation, IDocumentsManipulation documentsManipulation, IDocumentTypesManipulation documentTypesManipulation, IFilesManipulation filesManipulation)
+        public RequestController(IRequestsManipulation requestsManipulation,
+            IUsersManipulation usersManipulation, IPdfManipulation pdfManipulation,
+            IDocumentsManipulation documentsManipulation, IDocumentTypesManipulation documentTypesManipulation,
+            IFilesManipulation filesManipulation, IConfiguration configuration)
         {
             _requestsManipulation = requestsManipulation;
             _usersManipulation = usersManipulation;
@@ -37,6 +46,7 @@ namespace NSI.REST.Controllers
             _documentsManipulation = documentsManipulation;
             _documentTypesManipulation = documentTypesManipulation;
             _filesManipulation = filesManipulation;
+            _redirectUrl = configuration["QRCodeRedirectionUrl"];
         }
 
         /// <summary>
@@ -77,9 +87,9 @@ namespace NSI.REST.Controllers
         [Authorize]
         [PermissionCheck("request:view")]
         [HttpGet]
-        public async Task<ReqResponse> GetRequests([FromQuery]BasicRequest basicRequest) {
-            
-            if(!ModelState.IsValid)
+        public async Task<ReqResponse> GetRequests([FromQuery] BasicRequest basicRequest)
+        {
+            if (!ModelState.IsValid)
             {
                 return new ReqResponse()
                 {
@@ -105,7 +115,6 @@ namespace NSI.REST.Controllers
         [HttpGet("paging")]
         public async Task<ReqItemListResponse> GetRequestsWithPaging([FromQuery] BasicRequest basicRequest)
         {
-
             if (!ModelState.IsValid || basicRequest.Paging == null)
             {
                 return new ReqItemListResponse()
@@ -206,8 +215,9 @@ namespace NSI.REST.Controllers
             if (request.State.Equals(RequestState.Approved))
             {
                 DocumentType documentType = _documentTypesManipulation.GetByName(request.Type.ToString());
-                Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id, DateTime.UtcNow.AddYears(10), null , null);
-                
+                Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id,
+                    DateTime.UtcNow.AddYears(10), null, null);
+
                 User user = _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext));
                 byte[] fileBytes;
                 if (request.Type.Equals(RequestType.Passport))
@@ -218,7 +228,7 @@ namespace NSI.REST.Controllers
                 {
                     fileBytes = _pdfManipulation.CreateVisaPdf(document, user);
                 }
-                
+
                 var stream = new MemoryStream(fileBytes);
                 IFormFile file = new FormFile(stream, 0, fileBytes.Length, "document", document.Id + ".pdf");
                 string url = await _filesManipulation.UploadFile(file, document.Id.ToString());
@@ -227,11 +237,36 @@ namespace NSI.REST.Controllers
                 _documentsManipulation.UpdateDocument(document);
             }
 
-            return new ReqResponse()
+            return new ReqResponse
             {
-                Data = new List<Request> () {request} ,
+                Data = new List<Request> {request},
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
+            };
+        }
+
+        /// <summary>
+        /// Downloads QR for document validation
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/qr")]
+        public FileStreamResult DownloadQr([FromRoute] Guid id)
+        {
+            var document = _documentsManipulation.GetDocumentIfNotExpired(id);
+            if (document == null)
+            {
+                throw new NsiArgumentException("Can't download QR code for not existing or expired document");
+            }
+            var content = $"{_redirectUrl}/api/Document/{document.Id}";
+            var bitmap = QRCodeHelper.GenerateBitmap(content);
+            var stream = new MemoryStream();
+            bitmap.Save(stream, ImageFormat.Png);
+            stream.Position = 0;
+            return new FileStreamResult(stream, new MediaTypeHeaderValue("image/png"))
+            {
+                FileDownloadName =
+                    $"QR_{document.Id}_{string.Format("{0:yyyy-MM-ddTHH:mm:ss.FFFZ}", DateTime.UtcNow)}.png"
             };
         }
     }
