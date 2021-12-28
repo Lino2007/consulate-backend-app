@@ -34,7 +34,7 @@ namespace NSI.Repository.Implementations
                    Where(req => req.EmployeeId.ToString().Equals(employeeId));
         }
 
-        public async Task<Request> UpdateRequestAsync(ReqItemRequest item)
+        public async Task<Request> UpdateRequestAsync(ReqItemRequest item, User user)
         {
             var request = await GetRequestAsync(item.Id);
             if (request != null)
@@ -43,6 +43,7 @@ namespace NSI.Repository.Implementations
                     return request;
 
                 request.State = item.RequestState;
+                request.Employee = user;
                 await _context.SaveChangesAsync();
                 return request;
             }

@@ -15,7 +15,7 @@ namespace NSI.BusinessLogic.Interfaces
         Task<Request> SaveRequest(Guid userId, string requestReason, RequestType requestType, IEnumerable<IFormFile> attachments, string[] attachmentTypes);
         Task<IList<Request>> GetRequestsAsync();
         Task<IList<RequestItemDto>> GetEmployeeRequestsAsync(string employeeId, Paging paging);
-        Task<Request> UpdateRequestAsync(ReqItemRequest item);
+        Task<Request> UpdateRequestAsync(ReqItemRequest item, User user);
         Task<IList<RequestItemDto>> GetRequestPage(Paging paging);
     }
 }

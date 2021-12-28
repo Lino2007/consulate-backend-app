@@ -63,9 +63,9 @@ namespace NSI.BusinessLogic.Implementations
             return savedRequest;
         }
 
-        public async Task<Request> UpdateRequestAsync(ReqItemRequest item)
+        public async Task<Request> UpdateRequestAsync(ReqItemRequest item, User user)
         {
-            return await _requestsRepository.UpdateRequestAsync(item);
+            return await _requestsRepository.UpdateRequestAsync(item, user);
         }
 
         public async Task<IList<RequestItemDto>> GetRequestPage(Paging paging)

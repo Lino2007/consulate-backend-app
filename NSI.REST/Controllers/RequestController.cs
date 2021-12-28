@@ -42,8 +42,8 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Save new request.
         /// </summary>
-        //[Authorize]
-        //[PermissionCheck("request:create")]
+        [Authorize]
+        [PermissionCheck("request:create")]
         [HttpPost]
         public async Task<BaseResponse<Request>> SaveRequest([FromForm] DocumentRequest request)
         {
@@ -190,7 +190,8 @@ namespace NSI.REST.Controllers
                 };
             }
 
-            var request = await _requestsManipulation.UpdateRequestAsync(req);
+            User user = _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext));
+            var request = await _requestsManipulation.UpdateRequestAsync(req, user);
             if (request == null)
             {
                 Error newErr = new Error();
@@ -208,21 +209,20 @@ namespace NSI.REST.Controllers
                 DocumentType documentType = _documentTypesManipulation.GetByName(request.Type.ToString());
                 Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id, DateTime.UtcNow.AddYears(10), null , null);
                 
-                User user = _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext));
                 byte[] fileBytes;
                 if (request.Type.Equals(RequestType.Passport))
                 {
-                    fileBytes = _pdfManipulation.CreatePassportPdf(document, user);
+                    fileBytes = _pdfManipulation.CreatePassportPdf(document, request.User);
                 }
                 else
                 {
-                    fileBytes = _pdfManipulation.CreateVisaPdf(document, user);
+                    fileBytes = _pdfManipulation.CreateVisaPdf(document, request.User);
                 }
                 
                 var stream = new MemoryStream(fileBytes);
                 IFormFile file = new FormFile(stream, 0, fileBytes.Length, "document", document.Id + ".pdf");
                 string url = await _filesManipulation.UploadFile(file, document.Id.ToString());
-                document.Title = documentType.Name + " - " + user.FirstName + " " + user.LastName;
+                document.Title = documentType.Name + " - " + request.User.FirstName + " " + request.User.LastName;
                 document.Url = url;
                 _documentsManipulation.UpdateDocument(document);
             }
