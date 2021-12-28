@@ -84,7 +84,7 @@ namespace NSI.BusinessLogic.Implementations
             List<RequestItemDto> requestItemDtos = RequestList.Select(request =>
             { 
                 return new RequestItemDto(
-                   new SimplifiedRequestDto(request, idToMailMap[request.UserId.ToString()], idToMailMap[request.EmployeeId.ToString()]),
+                   new SimplifiedRequestDto(request, idToMailMap[request.UserId.ToString()], request.EmployeeId == null ? null : idToMailMap[request.EmployeeId.ToString()]),
                    DocumentList.Where(doc => doc.RequestId == request.Id).Select(doc => new DocumentDto(doc)).ToList(),
                    AttachmentList.Where(att => att.RequestId == request.Id).Select(att => new AttachmentDto(att)).ToList());
             }).ToList();

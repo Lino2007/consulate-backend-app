@@ -113,8 +113,10 @@ namespace NSI.REST.Controllers
                     Success = ResponseStatus.Failed
                 };
             }
-
-            _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
+            if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null)
+            {
+                _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
+            }
 
             return new BaseResponse<UserRole>()
             {
@@ -141,7 +143,8 @@ namespace NSI.REST.Controllers
                 };
             }
 
-            if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null) { 
+            if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null) 
+            { 
             _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
             }
 
