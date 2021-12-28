@@ -24,8 +24,8 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Gets document by id, if expiration date has not passed.
         /// </summary>
-        [Authorize]
-        [PermissionCheck("document:view")]
+        // [Authorize]
+        // [PermissionCheck("document:view")]
         [HttpGet("{id}")]
         public BaseResponse<Document> GetDocumentIfNotExpired([FromRoute] Guid id)
         {

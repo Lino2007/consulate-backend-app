@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
@@ -219,14 +220,24 @@ namespace NSI.REST.Controllers
                     DateTime.UtcNow.AddYears(10), null, null);
 
                 User user = _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext));
+
+                var content = $"{_redirectUrl}/api/Document/{document.Id}";
+                var bitmap = QRCodeHelper.GenerateBitmap(content);
+                var streamImg = new MemoryStream();
+                bitmap.Save(streamImg, ImageFormat.Png);
+                var imageBytes = ImageToByte(bitmap);
+                IFormFile fileImage = new FormFile(streamImg, 0, imageBytes.Length, "document", document.Id + ".png");
+                var imageUrl = await _filesManipulation.UploadFile(fileImage, document.Id.ToString());
+                // Console.WriteLine(imageUrl);
+
                 byte[] fileBytes;
                 if (request.Type.Equals(RequestType.Passport))
                 {
-                    fileBytes = _pdfManipulation.CreatePassportPdf(document, user);
+                    fileBytes = _pdfManipulation.CreatePassportPdf(document, user, imageUrl);
                 }
                 else
                 {
-                    fileBytes = _pdfManipulation.CreateVisaPdf(document, user);
+                    fileBytes = _pdfManipulation.CreateVisaPdf(document, user, imageUrl);
                 }
 
                 var stream = new MemoryStream(fileBytes);
@@ -245,6 +256,13 @@ namespace NSI.REST.Controllers
             };
         }
 
+        public static byte[] ImageToByte(Image img)
+        {
+            ImageConverter converter = new ImageConverter();
+            return (byte[]) converter.ConvertTo(img, typeof(byte[]));
+        }
+
+        /*
         /// <summary>
         /// Downloads QR for document validation
         /// </summary>
@@ -262,6 +280,7 @@ namespace NSI.REST.Controllers
             var bitmap = QRCodeHelper.GenerateBitmap(content);
             var stream = new MemoryStream();
             bitmap.Save(stream, ImageFormat.Png);
+            var x = ImageToByte(bitmap);
             stream.Position = 0;
             return new FileStreamResult(stream, new MediaTypeHeaderValue("image/png"))
             {
@@ -269,5 +288,6 @@ namespace NSI.REST.Controllers
                     $"QR_{document.Id}_{string.Format("{0:yyyy-MM-ddTHH:mm:ss.FFFZ}", DateTime.UtcNow)}.png"
             };
         }
+        */
     }
 }
