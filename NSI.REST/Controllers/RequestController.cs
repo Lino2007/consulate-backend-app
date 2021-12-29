@@ -185,8 +185,8 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Update request state, generate document if request is approved.
         /// </summary>
-        //[Authorize]
-        //[PermissionCheck("document:create")]
+        [Authorize]
+        [PermissionCheck("document:create")]
         [HttpPut]
         public async Task<ReqResponse> UpdateRequest(ReqItemRequest req)
         {

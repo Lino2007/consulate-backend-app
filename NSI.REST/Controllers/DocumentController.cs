@@ -1,12 +1,9 @@
 using System;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSI.BusinessLogic.Interfaces;
-using NSI.Common.DataContracts.Base;
-using NSI.Common.DataContracts.Enumerations;
-using NSI.DataContracts.Models;
 using NSI.REST.Filters;
-using NSI.REST.Helpers;
 
 namespace NSI.REST.Controllers
 {
@@ -22,28 +19,72 @@ namespace NSI.REST.Controllers
         }
 
         /// <summary>
-        /// Gets document by id, if expiration date has not passed.
+        /// Get HTML validation page for document by id.
         /// </summary>
-        // [Authorize]
-        // [PermissionCheck("document:view")]
+        [Authorize]
+        [PermissionCheck("document:view")]
         [HttpGet("{id}")]
-        public BaseResponse<Document> GetDocumentIfNotExpired([FromRoute] Guid id)
+        public ContentResult GetDocumentIfNotExpired([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
-                return new BaseResponse<Document>
+                return new ContentResult
                 {
-                    Data = null,
-                    Error = ValidationHelper.ToErrorResponse(ModelState),
-                    Success = ResponseStatus.Failed
+                    ContentType = "text/html",
+                    StatusCode = (int) HttpStatusCode.BadRequest,
+                    Content = "<html> " +
+                              "<head> <meta charset=\"UTF-8\"> </head> " +
+                              "<body> " +
+                              "<div " +
+                              "style=\"top: 50%; left: 50%; transform: translate(-50% , -50%); " +
+                              "position: absolute; background: lightcoral; font-size: 30px; font-family: Arial;\">" +
+                              "<h3 style=\"margin: 50px;\">Oops! Something went wrong.</h3> " +
+                              "<h5 style=\"margin: 50px; color: gray;\">Check if URL and document ID is valid.</h5> " +
+                              "</div> " +
+                              "</body> " +
+                              "</html>"
                 };
             }
 
-            return new BaseResponse<Document>
+            var document = _documentsManipulation.GetDocumentIfNotExpired(id);
+            if (document != null)
             {
-                Data = _documentsManipulation.GetDocumentIfNotExpired(id),
-                Error = ValidationHelper.ToErrorResponse(ModelState),
-                Success = ResponseStatus.Succeeded
+                return new ContentResult
+                {
+                    ContentType = "text/html",
+                    StatusCode = (int) HttpStatusCode.OK,
+                    Content = "<html> " +
+                              "<head> <meta charset=\"UTF-8\"> </head> " +
+                              "<body> " +
+                              "<div " +
+                              "style=\"top: 50%; left: 50%; transform: translate(-50% , -50%); " +
+                              "position: absolute; background: lightgreen; font-size: 30px; font-family: Arial;\">" +
+                              "<h1 style=\"margin: 50px;\">Document is VALID.</h1> " +
+                              "<h5 style=\"margin: 50px; color: gray;\">Title: " + document.Title + "</h5>" +
+                              "<h5 style=\"margin: 50px; color: gray;\">Expiration Date: " + document.DateOfExpiration +
+                              "</h5>" +
+                              "</div> " +
+                              "</body> " +
+                              "</html>"
+                };
+            }
+
+            return new ContentResult
+            {
+                ContentType = "text/html",
+                StatusCode = (int) HttpStatusCode.BadRequest,
+                Content = "<html> " +
+                          "<head> <meta charset=\"UTF-8\"> </head> " +
+                          "<body> " +
+                          "<div " +
+                          "style=\"top: 50%; left: 50%; transform: translate(-50% , -50%); " +
+                          "position: absolute; background: lightcoral; font-size: 30px; font-family: Arial;\">" +
+                          "<h1 style=\"margin: 50px;\">Document is INVALID.</h1> " +
+                          "<h5 style=\"margin: 50px; color: gray;\">Document does not exist or it has expired.</h5>" +
+                          "</h3>" +
+                          "</div>" +
+                          "</body> " +
+                          "</html>"
             };
         }
     }
