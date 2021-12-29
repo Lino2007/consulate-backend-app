@@ -206,5 +206,31 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
+
+        /// <summary>
+        /// Get all roles from logged user by email.
+        /// </summary>
+        [Authorize]
+        [HttpGet]
+        [Route("roles")]
+        public async Task<RolesResponse> GetUserRolesFromEmail([FromQuery(Name = "email")] string email)
+        {
+            if (!ModelState.IsValid || email == null || !new EmailAddressAttribute().IsValid(email))
+            {
+                return new RolesResponse()
+                {
+                    Data = null,
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new RolesResponse()
+            {
+                Data = await _authManipulation.GetRoles(email),
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = ResponseStatus.Succeeded
+            };
+        }
     }
 }

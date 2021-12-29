@@ -2,6 +2,8 @@ using NSI.BusinessLogic.Interfaces;
 using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NSI.BusinessLogic.Implementations
 {
@@ -32,6 +34,21 @@ namespace NSI.BusinessLogic.Implementations
             }
 
             var result = _rolesRepository.GetRoleByUserId(user.Id);
+
+            return result;
+
+        }
+
+        public async Task<IList<Role>> GetRoles(string email)
+        {
+            User user = _authRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var result = await _rolesRepository.GetRolesByUserId(user.Id);
 
             return result;
 

@@ -16,5 +16,7 @@ namespace NSI.Repository.Interfaces
         UserRole SaveRoleToUser(UserRole userRole);
 
         int RemoveRoleFromUser(UserRole userRole);
+
+        Task<IList<Role>> GetRolesByUserId(Guid userId);
     }
 }
