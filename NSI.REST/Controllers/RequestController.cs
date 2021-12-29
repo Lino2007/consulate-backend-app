@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,7 +17,6 @@ using NSI.DataContracts.Response;
 using NSI.REST.Filters;
 using NSI.REST.Helpers;
 using NSI.Common.Enumerations;
-using NSI.Common.Exceptions;
 using NSI.Common.Utilities;
 
 namespace NSI.REST.Controllers
@@ -217,17 +215,27 @@ namespace NSI.REST.Controllers
             if (request.State.Equals(RequestState.Approved))
             {
                 DocumentType documentType = _documentTypesManipulation.GetByName(request.Type.ToString());
-                Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id, DateTime.UtcNow.AddYears(10), null , null);
+                Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id,
+                    DateTime.UtcNow.AddYears(10), null, null);
                 User requestUser = _usersManipulation.GetById(request.UserId);
-                
+
+                var content = $"{_redirectUrl}/api/Document/{document.Id}";
+                var bitmap = QRCodeHelper.GenerateBitmap(content);
+                var streamImg = new MemoryStream();
+                bitmap.Save(streamImg, ImageFormat.Png);
+                var imageBytes = ImageToByte(bitmap);
+                IFormFile fileImage = new FormFile(streamImg, 0, imageBytes.Length, "document", document.Id + ".png");
+                var qrImageUrl = await _filesManipulation.UploadFile(fileImage, document.Id.ToString());
+                var qrImageBase64 = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
                 byte[] fileBytes;
                 if (request.Type.Equals(RequestType.Passport))
                 {
-                    fileBytes = _pdfManipulation.CreatePassportPdf(document, requestUser);
+                    fileBytes = _pdfManipulation.CreatePassportPdf(document, requestUser, qrImageBase64, qrImageUrl);
                 }
                 else
                 {
-                    fileBytes = _pdfManipulation.CreateVisaPdf(document, requestUser);
+                    fileBytes = _pdfManipulation.CreateVisaPdf(document, requestUser, qrImageBase64, qrImageUrl);
                 }
 
                 var stream = new MemoryStream(fileBytes);
