@@ -4,8 +4,8 @@ namespace NSI.BusinessLogic.Interfaces
 {
     public interface IPdfManipulation
     {
-        byte[] CreatePassportPdf(Document document, User user, string imageUrl);
+        byte[] CreatePassportPdf(Document document, User user, string qrImageBase64, string qrImageUrl);
 
-        byte[] CreateVisaPdf(Document document, User user, string imageUrl);
+        byte[] CreateVisaPdf(Document document, User user,  string qrImageBase64, string qrImageUrl);
     }
 }

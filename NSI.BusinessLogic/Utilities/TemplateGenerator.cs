@@ -5,17 +5,17 @@ namespace NSI.BusinessLogic.Utilities
 {
     public static class TemplateGenerator
     {
-        public static string GetPassportHtmlString(Document document, User user, string imageUrl)
+        public static string GetPassportHtmlString(Document document, User user,  string qrImageBase64, string qrImageUrl)
         {
-            return GetHtmlString(document, user, imageUrl);
+            return GetHtmlString(document, user, qrImageBase64, qrImageUrl);
         }
 
-        public static string GetVisaHtmlString(Document document, User user, string imageUrl)
+        public static string GetVisaHtmlString(Document document, User user,  string qrImageBase64, string qrImageUrl)
         {
-            return GetHtmlString(document, user, imageUrl);
+            return GetHtmlString(document, user, qrImageBase64, qrImageUrl);
         }
 
-        private static string GetHtmlString(Document document, User user, string imageUrl)
+        private static string GetHtmlString(Document document, User user,  string qrImageBase64, string qrImageUrl)
         {
             return @"
                      <div>
@@ -68,9 +68,13 @@ namespace NSI.BusinessLogic.Utilities
                         </tbody>
                      </table>
 
-                     <p><strong>Scan following QR code to check if document is valid:</strong>.</p>
-                     <img src=""" + imageUrl + @""" alt=""QR code"" width=""500"" height=""600"">
-                    
+                     <p>
+                        <strong>
+                        Scan following <a href=""" + qrImageUrl + @""">QR code</a> to check if document is valid:
+                        </strong>
+                     </p>
+                     <img src=""" + qrImageBase64 + @""" alt=""QR code"" style=""width:500px;height:500px;"">
+                   
                      <p style=""font-size: 12px;"">" +
                    (document.Type.Name.Equals("Passport")
                        ? "The Consulate General of Bosnia and Herzegovina in Frankfurt issues passports to citizens of Bosnia and Herzegovina who stay abroad for more than three months and to those who stay less than three months if the passport is destroyed, damaged, stolen or lost. The passport of Bosnia and Herzegovina is a document on the basis of which the identity and citizenship of the holder is determined. It is issued with a validity period of 10 years, for children under 3 years of age with a validity period of up to 3 years, for BiH citizens from 3 to 18 years of age with a validity period of 5 years."

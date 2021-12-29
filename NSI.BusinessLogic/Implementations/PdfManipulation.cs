@@ -15,17 +15,17 @@ namespace NSI.BusinessLogic.Implementations
             _converter = converter;
         }
 
-        public byte[] CreatePassportPdf(Document document, User user, string imageUrl)
+        public byte[] CreatePassportPdf(Document document, User user,  string qrImageBase64, string qrImageUrl)
         {
-            return CreatePdf(document, user, imageUrl);
+            return CreatePdf(document, user, qrImageBase64, qrImageUrl);
         }
 
-        public byte[] CreateVisaPdf(Document document, User user, string imageUrl)
+        public byte[] CreateVisaPdf(Document document, User user,  string qrImageBase64, string qrImageUrl)
         {
-            return CreatePdf(document, user, imageUrl);
+            return CreatePdf(document, user, qrImageBase64, qrImageUrl);
         }
 
-        private byte[] CreatePdf(Document document, User user, string imageUrl)
+        private byte[] CreatePdf(Document document, User user,  string qrImageBase64, string qrImageUrl)
         {
             var globalSettings = new GlobalSettings
             {
@@ -41,8 +41,8 @@ namespace NSI.BusinessLogic.Implementations
             {
                 PagesCount = true,
                 HtmlContent = document.Type.Name.Equals("Passport")
-                    ? TemplateGenerator.GetPassportHtmlString(document, user, imageUrl)
-                    : TemplateGenerator.GetVisaHtmlString(document, user, imageUrl),
+                    ? TemplateGenerator.GetPassportHtmlString(document, user, qrImageBase64, qrImageUrl)
+                    : TemplateGenerator.GetVisaHtmlString(document, user, qrImageBase64, qrImageUrl),
                 WebSettings = { DefaultEncoding = "utf-8" },
                 HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
                 FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Consulate General Of Bosnia And Herzegovina" }

@@ -227,17 +227,17 @@ namespace NSI.REST.Controllers
                 bitmap.Save(streamImg, ImageFormat.Png);
                 var imageBytes = ImageToByte(bitmap);
                 IFormFile fileImage = new FormFile(streamImg, 0, imageBytes.Length, "document", document.Id + ".png");
-                var imageUrl = await _filesManipulation.UploadFile(fileImage, document.Id.ToString());
-                // Console.WriteLine(imageUrl);
+                var qrImageUrl = await _filesManipulation.UploadFile(fileImage, document.Id.ToString());
+                var qrImageBase64 = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
 
                 byte[] fileBytes;
                 if (request.Type.Equals(RequestType.Passport))
                 {
-                    fileBytes = _pdfManipulation.CreatePassportPdf(document, user, imageUrl);
+                    fileBytes = _pdfManipulation.CreatePassportPdf(document, user, qrImageBase64, qrImageUrl);
                 }
                 else
                 {
-                    fileBytes = _pdfManipulation.CreateVisaPdf(document, user, imageUrl);
+                    fileBytes = _pdfManipulation.CreateVisaPdf(document, user, qrImageBase64, qrImageUrl);
                 }
 
                 var stream = new MemoryStream(fileBytes);
@@ -256,38 +256,10 @@ namespace NSI.REST.Controllers
             };
         }
 
-        public static byte[] ImageToByte(Image img)
+        private static byte[] ImageToByte(Image img)
         {
             ImageConverter converter = new ImageConverter();
             return (byte[]) converter.ConvertTo(img, typeof(byte[]));
         }
-
-        /*
-        /// <summary>
-        /// Downloads QR for document validation
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}/qr")]
-        public FileStreamResult DownloadQr([FromRoute] Guid id)
-        {
-            var document = _documentsManipulation.GetDocumentIfNotExpired(id);
-            if (document == null)
-            {
-                throw new NsiArgumentException("Can't download QR code for not existing or expired document");
-            }
-            var content = $"{_redirectUrl}/api/Document/{document.Id}";
-            var bitmap = QRCodeHelper.GenerateBitmap(content);
-            var stream = new MemoryStream();
-            bitmap.Save(stream, ImageFormat.Png);
-            var x = ImageToByte(bitmap);
-            stream.Position = 0;
-            return new FileStreamResult(stream, new MediaTypeHeaderValue("image/png"))
-            {
-                FileDownloadName =
-                    $"QR_{document.Id}_{string.Format("{0:yyyy-MM-ddTHH:mm:ss.FFFZ}", DateTime.UtcNow)}.png"
-            };
-        }
-        */
     }
 }
