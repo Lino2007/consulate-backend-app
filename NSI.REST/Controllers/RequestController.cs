@@ -208,21 +208,22 @@ namespace NSI.REST.Controllers
             {
                 DocumentType documentType = _documentTypesManipulation.GetByName(request.Type.ToString());
                 Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id, DateTime.UtcNow.AddYears(10), null , null);
+                User requestUser = _usersManipulation.GetById(request.UserId);
                 
                 byte[] fileBytes;
                 if (request.Type.Equals(RequestType.Passport))
                 {
-                    fileBytes = _pdfManipulation.CreatePassportPdf(document, request.User);
+                    fileBytes = _pdfManipulation.CreatePassportPdf(document, requestUser);
                 }
                 else
                 {
-                    fileBytes = _pdfManipulation.CreateVisaPdf(document, request.User);
+                    fileBytes = _pdfManipulation.CreateVisaPdf(document, requestUser);
                 }
                 
                 var stream = new MemoryStream(fileBytes);
                 IFormFile file = new FormFile(stream, 0, fileBytes.Length, "document", document.Id + ".pdf");
                 string url = await _filesManipulation.UploadFile(file, document.Id.ToString());
-                document.Title = documentType.Name + " - " + request.User.FirstName + " " + request.User.LastName;
+                document.Title = documentType.Name + " - " + requestUser.FirstName + " " + requestUser.LastName;
                 document.Url = url;
                 _documentsManipulation.UpdateDocument(document);
             }

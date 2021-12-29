@@ -1,4 +1,5 @@
-﻿using NSI.BusinessLogic.Interfaces;
+﻿using System;
+using NSI.BusinessLogic.Interfaces;
 using NSI.DataContracts.Models;
 using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
@@ -18,6 +19,11 @@ namespace NSI.BusinessLogic.Implementations
         public UsersManipulation(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
+        }
+        
+        public User GetById(Guid id)
+        {
+            return _usersRepository.GetById(id);
         }
 
         public User GetByEmail(string email)
