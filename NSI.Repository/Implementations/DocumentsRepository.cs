@@ -48,5 +48,16 @@ namespace NSI.Repository.Implementations
                 select document
             ).ToListAsync();
         }
+
+        public Document GetDocumentIfNotExpired(Guid documentId)
+        {
+            var document = _context.Document.FirstOrDefault(u => u.Id.Equals(documentId));
+            if (document is null)
+            {
+                return null;
+            }
+            var validDateOfExpiration = DateTime.Compare(document.DateOfExpiration, DateTime.Now);
+            return validDateOfExpiration < 0 ? null : document;
+        }
     }
 }

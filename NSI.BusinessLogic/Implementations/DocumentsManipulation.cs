@@ -7,7 +7,7 @@ using NSI.Repository.Interfaces;
 
 namespace NSI.BusinessLogic.Implementations
 {
-    public class DocumentsManipulation: IDocumentsManipulation
+    public class DocumentsManipulation : IDocumentsManipulation
     {
         private readonly IDocumentsRepository _documentsRepository;
 
@@ -15,7 +15,7 @@ namespace NSI.BusinessLogic.Implementations
         {
             _documentsRepository = documentsRepository;
         }
-        
+
         public Document SaveDocument(Guid requestId, Guid typeId, DateTime dateOfExpiration, string url, string title)
         {
             return _documentsRepository.SaveDocument(new Document(requestId, typeId, dateOfExpiration, url, title));
@@ -29,6 +29,11 @@ namespace NSI.BusinessLogic.Implementations
         public Task<IList<Document>> GetDocumentsByUserIdAndType(Guid id, string type)
         {
             return _documentsRepository.GetDocumentsByUserIdAndType(id, type);
+        }
+
+        public Document GetDocumentIfNotExpired(Guid documentId)
+        {
+            return _documentsRepository.GetDocumentIfNotExpired(documentId);
         }
     }
 }
