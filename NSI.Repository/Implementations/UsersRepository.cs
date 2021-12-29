@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,11 @@ namespace NSI.Repository.Implementations
         public UsersRepository(DataContext context)
         {
             _context = context;
+        }
+        
+        public User GetById(Guid id)
+        {
+            return _context.User.First(u => u.Id.Equals(id));
         }
 
         public User GetByEmail(string email)

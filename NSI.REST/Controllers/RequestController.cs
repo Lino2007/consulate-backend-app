@@ -53,8 +53,8 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Save new request.
         /// </summary>
-        //[Authorize]
-        //[PermissionCheck("request:create")]
+        [Authorize]
+        [PermissionCheck("request:create")]
         [HttpPost]
         public async Task<BaseResponse<Request>> SaveRequest([FromForm] DocumentRequest request)
         {
@@ -200,7 +200,8 @@ namespace NSI.REST.Controllers
                 };
             }
 
-            var request = await _requestsManipulation.UpdateRequestAsync(req);
+            User user = _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext));
+            var request = await _requestsManipulation.UpdateRequestAsync(req, user);
             if (request == null)
             {
                 Error newErr = new Error();
@@ -216,34 +217,23 @@ namespace NSI.REST.Controllers
             if (request.State.Equals(RequestState.Approved))
             {
                 DocumentType documentType = _documentTypesManipulation.GetByName(request.Type.ToString());
-                Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id,
-                    DateTime.UtcNow.AddYears(10), null, null);
-
-                User user = _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext));
-
-                var content = $"{_redirectUrl}/api/Document/{document.Id}";
-                var bitmap = QRCodeHelper.GenerateBitmap(content);
-                var streamImg = new MemoryStream();
-                bitmap.Save(streamImg, ImageFormat.Png);
-                var imageBytes = ImageToByte(bitmap);
-                IFormFile fileImage = new FormFile(streamImg, 0, imageBytes.Length, "document", document.Id + ".png");
-                var qrImageUrl = await _filesManipulation.UploadFile(fileImage, document.Id.ToString());
-                var qrImageBase64 = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
+                Document document = _documentsManipulation.SaveDocument(request.Id, documentType.Id, DateTime.UtcNow.AddYears(10), null , null);
+                User requestUser = _usersManipulation.GetById(request.UserId);
+                
                 byte[] fileBytes;
                 if (request.Type.Equals(RequestType.Passport))
                 {
-                    fileBytes = _pdfManipulation.CreatePassportPdf(document, user, qrImageBase64, qrImageUrl);
+                    fileBytes = _pdfManipulation.CreatePassportPdf(document, requestUser);
                 }
                 else
                 {
-                    fileBytes = _pdfManipulation.CreateVisaPdf(document, user, qrImageBase64, qrImageUrl);
+                    fileBytes = _pdfManipulation.CreateVisaPdf(document, requestUser);
                 }
 
                 var stream = new MemoryStream(fileBytes);
                 IFormFile file = new FormFile(stream, 0, fileBytes.Length, "document", document.Id + ".pdf");
                 string url = await _filesManipulation.UploadFile(file, document.Id.ToString());
-                document.Title = documentType.Name + " - " + user.FirstName + " " + user.LastName;
+                document.Title = documentType.Name + " - " + requestUser.FirstName + " " + requestUser.LastName;
                 document.Url = url;
                 _documentsManipulation.UpdateDocument(document);
             }

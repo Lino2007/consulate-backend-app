@@ -11,7 +11,7 @@ namespace NSI.Repository.Interfaces
         Request SaveRequest(Request request);
         Task<IList<Request>> GetRequestsAsync();
         IQueryable<Request> GetEmployeeRequestsAsync(string employeeId);
-        Task<Request> UpdateRequestAsync(ReqItemRequest item);
+        Task<Request> UpdateRequestAsync(ReqItemRequest item, User user);
         IQueryable<Request> GetRequestQueryWithFilters();
         
     }
