@@ -10,6 +10,6 @@ namespace NSI.Repository.Interfaces
         Document SaveDocument(Document document);
         Document UpdateDocument(Document document);
         Task<IList<Document>> GetDocumentsByUserIdAndType(Guid id, string type);
-        Document GetDocumentIfNotExpired(Guid documentId);
+        Document GetDocumentById(Guid documentId);
     }
 }

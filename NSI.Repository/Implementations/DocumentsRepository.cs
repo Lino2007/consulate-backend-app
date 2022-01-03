@@ -29,6 +29,7 @@ namespace NSI.Repository.Implementations
             Document oldDocument = _context.Document.First(d => d.Id.Equals(document.Id));
             oldDocument.Url = document.Url;
             oldDocument.Title = document.Title;
+            oldDocument.BlockchainId = document.BlockchainId;
             _context.SaveChanges();
             return oldDocument;
         }
@@ -49,15 +50,9 @@ namespace NSI.Repository.Implementations
             ).ToListAsync();
         }
 
-        public Document GetDocumentIfNotExpired(Guid documentId)
+        public Document GetDocumentById(Guid documentId)
         {
-            var document = _context.Document.FirstOrDefault(u => u.Id.Equals(documentId));
-            if (document is null)
-            {
-                return null;
-            }
-            var validDateOfExpiration = DateTime.Compare(document.DateOfExpiration, DateTime.Now);
-            return validDateOfExpiration < 0 ? null : document;
+            return _context.Document.FirstOrDefault(u => u.Id.Equals(documentId));
         }
     }
 }

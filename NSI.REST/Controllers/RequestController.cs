@@ -32,12 +32,13 @@ namespace NSI.REST.Controllers
         private readonly IDocumentsManipulation _documentsManipulation;
         private readonly IDocumentTypesManipulation _documentTypesManipulation;
         private readonly IFilesManipulation _filesManipulation;
+        private readonly IBlockchainManipulation _blockchainManipulation;
         private readonly string _redirectUrl;
 
         public RequestController(IRequestsManipulation requestsManipulation,
             IUsersManipulation usersManipulation, IPdfManipulation pdfManipulation,
             IDocumentsManipulation documentsManipulation, IDocumentTypesManipulation documentTypesManipulation,
-            IFilesManipulation filesManipulation, IConfiguration configuration)
+            IFilesManipulation filesManipulation, IConfiguration configuration, IBlockchainManipulation blockchainManipulation)
         {
             _requestsManipulation = requestsManipulation;
             _usersManipulation = usersManipulation;
@@ -45,6 +46,7 @@ namespace NSI.REST.Controllers
             _documentsManipulation = documentsManipulation;
             _documentTypesManipulation = documentTypesManipulation;
             _filesManipulation = filesManipulation;
+            _blockchainManipulation = blockchainManipulation;
             _redirectUrl = configuration["QRCodeRedirectionUrl"];
         }
 
@@ -241,8 +243,11 @@ namespace NSI.REST.Controllers
                 var stream = new MemoryStream(fileBytes);
                 IFormFile file = new FormFile(stream, 0, fileBytes.Length, "document", document.Id + ".pdf");
                 string url = await _filesManipulation.UploadFile(file, document.Id.ToString());
+                var uploadedFileStream = await _filesManipulation.DownloadFile(Path.GetFileName(url));
+                string blockchainId = await _blockchainManipulation.UploadDocument(document.Id.ToString(), uploadedFileStream);
                 document.Title = documentType.Name + " - " + requestUser.FirstName + " " + requestUser.LastName;
                 document.Url = url;
+                document.BlockchainId = blockchainId;
                 _documentsManipulation.UpdateDocument(document);
             }
 

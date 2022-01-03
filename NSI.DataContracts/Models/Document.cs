@@ -27,6 +27,9 @@ namespace NSI.DataContracts.Models
 
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
+        
+        [JsonProperty(PropertyName = "blockchainId")]
+        public string BlockchainId { get; set; }
 
         [ForeignKey("RequestId")]
         public Request Request { get; set; }

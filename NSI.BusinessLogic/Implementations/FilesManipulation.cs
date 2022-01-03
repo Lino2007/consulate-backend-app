@@ -60,17 +60,14 @@ namespace NSI.BusinessLogic.Implementations
             return _endpointUrl + "/" + _bucketName + "/" + _folderName + "/" + fileNameWithExtension;
         }
 
-        public async Task<string> DownloadFile(string fileName)
+        public async Task<Stream> DownloadFile(string fileName)
         {
             GetObjectRequest request = new GetObjectRequest
             {
                 BucketName = _bucketName,
                 Key = _folderName + "/" + fileName
             };
-            using GetObjectResponse response = await _client.GetObjectAsync(request);
-            await using Stream responseStream = response.ResponseStream;
-            using StreamReader reader = new StreamReader(responseStream);
-            return await reader.ReadToEndAsync();
+            return (await _client.GetObjectAsync(request)).ResponseStream;
         }
 
         public async Task ListFiles()

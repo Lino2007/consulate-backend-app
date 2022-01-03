@@ -163,6 +163,7 @@ namespace NSI.REST
             services.AddTransient<IDocumentTypesManipulation, DocumentTypesManipulation>();
             services.AddTransient<IPdfManipulation, PdfManipulation>();
             services.AddTransient<IFilesManipulation, FilesManipulation>();
+            services.AddTransient<IBlockchainManipulation, BlockchainManipulation>();
         }
 
         private void RegisterBusinessLayer(IServiceCollection services)
