@@ -95,6 +95,30 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
+        
+        /// <summary>
+        /// Delete existing role.
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("role:modify")]
+        [HttpDelete("{id}")]
+        public BaseDeleteResponse DeleteRole(string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new BaseDeleteResponse()
+                {
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new BaseDeleteResponse()
+            {
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = _rolesManipulation.DeleteRole(id)
+            };
+        }
 
         /// <summary>
         /// Assign existing role to existing user.

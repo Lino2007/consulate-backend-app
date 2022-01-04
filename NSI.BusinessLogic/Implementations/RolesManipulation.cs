@@ -36,6 +36,11 @@ namespace NSI.BusinessLogic.Implementations
         {
             return _rolesRepository.SaveRole(new Role(name));
         }
+        
+        public ResponseStatus DeleteRole(string id)
+        {
+            return (ResponseStatus) _rolesRepository.DeleteRole(Guid.Parse(id));
+        }
 
         public UserRole SaveRoleToUser(Guid roleId, Guid userId)
         {

@@ -43,6 +43,26 @@ namespace NSI.Repository.Implementations
             _context.SaveChanges();
             return savedRole;
         }
+        
+        public int DeleteRole(Guid id)
+        {
+            Role existingRole = _context.Role.First(r => r.Id.Equals(id));
+            
+            if (existingRole == null || _context.UserRole.Any(ur => ur.RoleId.Equals(id)))
+            {
+                return 0;
+            }
+
+            var rolePermissions = _context.RolePermission.Where(rp => rp.RoleId.Equals(id));
+
+            foreach (var rolePermission in rolePermissions)
+            {
+                _context.Remove(rolePermission);
+            }
+
+            _context.Role.Remove(existingRole);
+            return _context.SaveChanges() > 0 ? 1 : 0;
+        }
 
         public UserRole SaveRoleToUser(UserRole userRole)
         {
