@@ -20,6 +20,15 @@ variables:
     buildConfiguration: production
 
 steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'NSI-Sonar-Echo'
+    organization: 'nsi-1'
+    scannerMode: 'MSBuild'
+    projectKey: 'NSI_NSI.Service.Echo'
+    projectName: 'NSI.Service.Echo'
+    extraProperties: 'sonar.exclusions=**/*.bin,NSI.REST/appsettings.json'
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
@@ -40,17 +49,6 @@ steps:
   inputs:
     projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
-
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'NSI-Sonar-Echo'
-    organization: 'nsi-1'
-    scannerMode: 'MSBuild'
-    projectKey: 'NSI_NSI.Service.Echo'
-    projectName: 'NSI.Service.Echo'
-    extraProperties: 'sonar.exclusions=**/*.bin,NSI.REST/appsettings.json'
-      # Additional properties that will be passed to the scanner, 
-      # Put one key=value per line, example:
 
 - task: SonarCloudAnalyze@1
 
