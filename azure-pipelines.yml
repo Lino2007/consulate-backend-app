@@ -45,9 +45,9 @@ steps:
   displayName: 'Execute Unit Tests'
   inputs:
     command: test
-    projects: '**/UnitTests/*.csproj'
+    projects: '**/NSI.Tests/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
-    testRunTitle: 'Unit Tests for $(Build.BuildNumber)'
+    testRunTitle: 'Tests for $(Build.BuildNumber)'
 
 - task: SonarCloudAnalyze@1
 
