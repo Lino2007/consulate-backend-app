@@ -41,6 +41,23 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'NSI-Sonar-Echo'
+    organization: 'nsi-1'
+    scannerMode: 'MSBuild'
+    projectKey: 'NSI_NSI.Service.Echo'
+    projectName: 'NSI.Service.Echo'
+    extraProperties: 'sonar.exclusions=**/*.bin,NSI.REST/appsettings.json'
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '60'
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
