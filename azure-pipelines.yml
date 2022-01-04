@@ -27,7 +27,9 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'NSI_NSI.Service.Echo'
     projectName: 'NSI.Service.Echo'
-    extraProperties: 'sonar.exclusions=**/*.bin,NSI.REST/appsettings.json'
+    extraProperties: |
+      sonar.exclusions=**/*.bin,NSI.REST/appsettings.json
+      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
 
 - task: DotNetCoreCLI@2
   displayName: Restore
@@ -42,7 +44,7 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Execute Unit Tests'
+  displayName: 'Execute Tests'
   inputs:
     command: test
     projects: '**/NSI.Tests/*.csproj'
@@ -60,15 +62,8 @@ steps:
   inputs:
     command: publish
     publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: nsiService
-  condition: succeededOrFailed()
 
 - task: PublishPipelineArtifact@1
   inputs:
