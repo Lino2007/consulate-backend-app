@@ -29,15 +29,6 @@ steps:
     projectName: 'NSI.Service.Echo'
     extraProperties: 'sonar.exclusions=**/*.bin,NSI.REST/appsettings.json'
 
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK'
-  inputs:
-    version: 5.x
-    performMultiLevelLookup: True
-
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
@@ -50,17 +41,6 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
 
-- task: SonarCloudAnalyze@1
-
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '60'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)'
-    publishLocation: 'pipeline'
-
 - task: DotNetCoreCLI@2
   displayName: 'Execute Unit Tests'
   inputs:
@@ -68,6 +48,12 @@ steps:
     projects: '**/UnitTests/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
     testRunTitle: 'Unit Tests for $(Build.BuildNumber)'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '60'
 
 - task: DotNetCoreCLI@2
   displayName: Publish
@@ -83,3 +69,17 @@ steps:
     PathtoPublish: '$(build.artifactstagingdirectory)'
     ArtifactName: nsiService
   condition: succeededOrFailed()
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    publishLocation: 'pipeline'
+
+#- script: dotnet build --configuration $(buildConfiguration)
+#  displayName: 'dotnet build $(buildConfiguration)'
+#
+#- task: UseDotNet@2
+#  displayName: 'Install .NET Core SDK'
+#  inputs:
+#    version: 5.x
+#    performMultiLevelLookup: True
