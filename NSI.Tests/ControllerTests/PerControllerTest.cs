@@ -53,9 +53,9 @@ namespace NSI.Tests.ControllerTests
             {
                 result = permissionController.SavePermission(null);
             }
-            catch (Exception ex)
+            catch 
             {
-
+             
             }
             Assert.Null(result);
 
