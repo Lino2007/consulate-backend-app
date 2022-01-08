@@ -13,6 +13,7 @@ using NSI.REST.Helpers;
 namespace NSI.REST.Controllers
 {
     [ApiController]
+    [ServiceFilter(typeof(CacheCheck))]
     [Route("api/[controller]")]
     public class EmployeeController : Controller
     {

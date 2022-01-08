@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NSI.DataContracts.Models
 {
+    [Table("User", Schema = "echo")]
     public class User : BaseModelDto
     {
         [JsonProperty(PropertyName = "dateCreated")]

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NSI.DataContracts.Models
 {
+    [Table("RolePermission", Schema = "echo")]
     public class RolePermission : BaseModelDto
     {
         [JsonProperty(PropertyName = "roleId")]

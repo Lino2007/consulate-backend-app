@@ -10,6 +10,7 @@ using NSI.REST.Filters;
 namespace NSI.REST.Controllers
 {
     [ApiController]
+    [ServiceFilter(typeof(CacheCheck))]
     [Route("api/[controller]")]
     public class DocumentController : Controller
     {

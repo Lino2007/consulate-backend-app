@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NSI.DataContracts.Models
 {
+    [Table("Document", Schema = "echo")]
     public class Document : BaseModelDto
     {
         [JsonProperty(PropertyName = "requestId")]

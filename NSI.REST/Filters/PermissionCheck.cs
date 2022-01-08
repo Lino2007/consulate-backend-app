@@ -26,6 +26,10 @@ namespace NSI.REST.Filters
 
             var userPermissions = (List<PermissionEnum>) context.HttpContext.Items["permissions"];
 
+            foreach (var permission in userPermissions)
+            {
+                System.Diagnostics.Debug.WriteLine(permission);
+            }
             if (userPermissions != null)
             {
                 if (!IsAuthorized(userPermissions, routePerm))
