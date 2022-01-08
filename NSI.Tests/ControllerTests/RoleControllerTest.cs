@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NSI.Tests.ControllerTests
 {
-    public class ControllerTests
+    public class RoleControllerTest
     {
         [Fact]
         public async Task ControllerTest1()
