@@ -29,7 +29,7 @@ steps:
     projectName: 'NSI.Service.Echo'
     extraProperties: |
       sonar.exclusions=**/*.bin,NSI.REST/appsettings.json
-      sonar.cs.vscoveragexml.reportsPaths=$(Agent.BuildDirectory)\TestResults\TestCoverage.xml
+      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
 
 - task: DotNetCoreCLI@2
   displayName: Restore
@@ -50,35 +50,6 @@ steps:
     projects: '**/NSI.Tests/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
     testRunTitle: 'Tests for $(Build.BuildNumber)'
-
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      Get-ChildItem -Path $(Agent.TempDirectory) -Filter *.trx -Recurse -ErrorAction SilentlyContinue`
-      | %{Join-Path -Path $_.Directory -ChildPath $_.Name }`
-      | Copy-Item -Destination $(Agent.BuildDirectory)\TestResults\TestResults.trx
-       
-      Get-ChildItem -Path $(Agent.TempDirectory) -Filter *.coverage -Recurse -ErrorAction SilentlyContinue `
-      |%{Join-Path -Path $_.Directory -ChildPath $_.Name }`
-      | Copy-Item -Destination $(Agent.BuildDirectory)\TestResults\TestCoverage.coverage 
-
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $tool= Get-ChildItem -Path '$(Agent.TempDirectory)\VsTest\*\tools\net451\Team Tools\Dynamic Code Coverage Tools\amd64\'`
-       -Filter CodeCoverage.exe -Recurse -ErrorAction SilentlyContinue
-       
-      $parameter1 =  'analyze'
-      $parameter2 = '/output:$(Agent.BuildDirectory)\TestResults\TestCoverage.xml'
-      $parameter3 = '$(Agent.BuildDirectory)\TestResults\TestCoverage.coverage'
-      $parameters= "$parameter1 $parameter2 $parameter3"
-      Write-Output $tool
-       
-      Write-Host "Executing $tool $parameters"
-      $parms = $parameters.Split(" ")
-      & "$tool" $parms
 
 - task: SonarCloudAnalyze@1
 
