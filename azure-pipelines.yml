@@ -55,20 +55,20 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Get-ChildItem -Path $(Agent.TempDirectory) -Filter *.trx -Recurse -ErrorAction SilentlyContinue -Force`
+      Get-ChildItem -Path $(Agent.TempDirectory) -Filter *.trx -Recurse -ErrorAction SilentlyContinue`
       | %{Join-Path -Path $_.Directory -ChildPath $_.Name }`
-      | Copy-Item -Destination $(Agent.BuildDirectory)\TestResults\TestResults.trx -Force
+      | Copy-Item -Destination $(Agent.BuildDirectory)\TestResults\TestResults.trx
        
-      Get-ChildItem -Path $(Agent.TempDirectory) -Filter *.coverage -Recurse -ErrorAction SilentlyContinue -Force `
+      Get-ChildItem -Path $(Agent.TempDirectory) -Filter *.coverage -Recurse -ErrorAction SilentlyContinue `
       |%{Join-Path -Path $_.Directory -ChildPath $_.Name }`
-      | Copy-Item -Destination $(Agent.BuildDirectory)\TestResults\TestCoverage.coverage -Force
+      | Copy-Item -Destination $(Agent.BuildDirectory)\TestResults\TestCoverage.coverage 
 
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
       $tool= Get-ChildItem -Path '$(Agent.TempDirectory)\VsTest\*\tools\net451\Team Tools\Dynamic Code Coverage Tools\amd64\'`
-       -Filter CodeCoverage.exe -Recurse -ErrorAction SilentlyContinue -Force
+       -Filter CodeCoverage.exe -Recurse -ErrorAction SilentlyContinue
        
       $parameter1 =  'analyze'
       $parameter2 = '/output:$(Agent.BuildDirectory)\TestResults\TestCoverage.xml'
