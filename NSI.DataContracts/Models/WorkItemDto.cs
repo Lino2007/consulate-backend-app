@@ -40,6 +40,10 @@ namespace NSI.DataContracts.Models
         }
 
         [JsonProperty("id")]
-        public int AlternateIdField { set { if (value > 0) Id = value; } }
+        public int AlternateIdField
+        {
+            get => Id ?? 1;
+            set { if (value > 0) Id = value; }
+        }
     }
 }

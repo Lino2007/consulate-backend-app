@@ -3,7 +3,7 @@ using QRCoder;
 
 namespace NSI.Common.Utilities
 {
-    public class QRCodeHelper
+    public static class QRCodeHelper
     {
         public static Bitmap GenerateBitmap(string content)
         {

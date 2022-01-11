@@ -15,14 +15,9 @@ namespace NSI.Common.Extensions
         /// <param name="filterCriteria"><see cref="FilterCriteria"/></param>
         public static void ValidateFilterCriteria(this FilterCriteria filterCriteria)
         {
-            if (filterCriteria != null)
+            if (filterCriteria != null && string.IsNullOrWhiteSpace(filterCriteria.ColumnName))
             {
-                if (string.IsNullOrWhiteSpace(filterCriteria.ColumnName))
-                {
-                    throw new NsiArgumentException(ExceptionMessages.FilterColumnNameEmpty);
-                }
-
-                // Do not validate filter term, it can be empty and should be ignored
+                throw new NsiArgumentException(ExceptionMessages.FilterColumnNameEmpty);
             }
         }
     }

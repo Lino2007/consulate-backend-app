@@ -48,11 +48,11 @@ namespace NSI.BusinessLogic.Implementations
             return await CreateRequestItemDto(RequestList);
         }
 
-        public async Task<Request> SaveRequest(Guid userId, string reason, RequestType type,  IEnumerable<IFormFile> files, string[] attachmentTypes)
+        public async Task<Request> SaveRequest(Guid userId, string requestReason, RequestType requestType,  IEnumerable<IFormFile> attachments, string[] attachmentTypes)
         {
-            Request savedRequest = _requestsRepository.SaveRequest(new Request(userId, reason, type));
+            Request savedRequest = _requestsRepository.SaveRequest(new Request(userId, requestReason, requestType));
             int i = 0;
-            foreach (var file in files)
+            foreach (var file in attachments)
             {
                 Attachment attachment = _attachmentRepository.SaveAttachment(new Attachment(savedRequest.Id, _documentTypesRepository.GetByName(attachmentTypes[i]).Id));
                 string url = await _filesManipulation.UploadFile(file, attachment.Id.ToString());

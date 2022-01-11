@@ -19,11 +19,10 @@ namespace NSI.Tests.ControllerTests
         public async Task RoleControllerTest1()
         {
             var roleMock = new Mock<IRolesManipulation>();
-            var usrPerMock = new Mock<IUserPermissionManipulation>();
             var cacheMock = new Mock<ICacheProvider>();
 
             roleMock.Setup(roleMock => roleMock.GetRolesAsync(new Guid(), null, null, null)).ReturnsAsync(() => { return null; });
-            var roleController = new RoleController(roleMock.Object, usrPerMock.Object, cacheMock.Object);
+            var roleController = new RoleController(roleMock.Object, cacheMock.Object);
 
             var result = await roleController.GetRoles(new DataContracts.Request.BasicRequest(), new Guid());
 
@@ -34,11 +33,10 @@ namespace NSI.Tests.ControllerTests
         public void RoleControllerTest2()
         {
             var roleMock = new Mock<IRolesManipulation>();
-            var usrPerMock = new Mock<IUserPermissionManipulation>();
             var cacheMock = new Mock<ICacheProvider>();
 
             roleMock.Setup(roleMock => roleMock.SaveRole(null)).Returns(() => { return null; });
-            var roleController = new RoleController(roleMock.Object, usrPerMock.Object, cacheMock.Object);
+            var roleController = new RoleController(roleMock.Object, cacheMock.Object);
 
             var result =  roleController.SaveRole(new NameRequest());
 
@@ -50,11 +48,10 @@ namespace NSI.Tests.ControllerTests
         public void RoleControllerTest3()
         {
             var roleMock = new Mock<IRolesManipulation>();
-            var usrPerMock = new Mock<IUserPermissionManipulation>();
             var cacheMock = new Mock<ICacheProvider>();
 
             roleMock.Setup(roleMock => roleMock.DeleteRole(null)).Returns(() => { return ResponseStatus.Succeeded; });
-            var roleController = new RoleController(roleMock.Object, usrPerMock.Object, cacheMock.Object);
+            var roleController = new RoleController(roleMock.Object, cacheMock.Object);
 
             var result = roleController.SaveRole(new NameRequest());
 

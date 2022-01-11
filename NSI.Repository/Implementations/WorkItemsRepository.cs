@@ -17,7 +17,7 @@ namespace NSI.Repository.Implementations
         private readonly IAzureProxy _proxy;
         private readonly IConfiguration _configuration;
         private string _endpointUrl { get; set; }
-        private string _organization { get; set; }
+        private string _organization { get; }
 
         public WorkItemsRepository(
             IAzureProxy azureProxy,

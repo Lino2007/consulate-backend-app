@@ -23,26 +23,13 @@ namespace NSI.REST.Controllers
     public class RoleController : Controller
     {
         private readonly IRolesManipulation _rolesManipulation;
-        private readonly IUserPermissionManipulation _userPermissionManipulation;
         private readonly ICacheProvider _cacheProvider;
 
-        public RoleController(IRolesManipulation rolesManipulation, IUserPermissionManipulation userPermissionManipulation, ICacheProvider cacheProvider)
+        public RoleController(IRolesManipulation rolesManipulation, ICacheProvider cacheProvider)
         {
             _rolesManipulation = rolesManipulation;
-            _userPermissionManipulation = userPermissionManipulation;
             _cacheProvider = cacheProvider;
         }
-
-        /*
-        [HttpGet("Test")]
-        public async Task<string> Tester()
-        {
-            // method for testing 
-            var test = await _userPermissionManipulation.GetPermissionsForUserAsync("aturkusic1@etf.unsa.ba");
-            System.Diagnostics.Debug.WriteLine(test);
-            return null;
-        }
-        */
 
         /// <summary>
         /// Gets all roles.

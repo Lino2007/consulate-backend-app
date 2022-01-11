@@ -18,13 +18,13 @@ namespace NSI.Repository.Implementations
             _context = context;
         }
 
-        public async Task<IList<Document>> getDocumentsByRequests(List<Request> RequestList)
+        public async Task<IList<Document>> getDocumentsByRequests(List<Request> req)
         {
-            if (RequestList == null || RequestList.Count == 0)
+            if (req == null || req.Count == 0)
             {
                 return null;
             }
-            var idList = RequestList.Select(x => x.Id).ToList();
+            var idList = req.Select(x => x.Id).ToList();
             var result = await (from document in _context.Document
                                  from dt in _context.DocumentType
                                  where idList.Contains(document.RequestId) && document.TypeId == dt.Id

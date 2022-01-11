@@ -16,7 +16,7 @@ namespace NSI.BusinessLogic.Implementations
         private readonly string _endpointUrl;
         private readonly string _bucketName;
         private readonly string _folderName;
-        private static AmazonS3Client _client;
+        private readonly AmazonS3Client _client;
 
         public FilesManipulation(IConfiguration configuration)
         {
@@ -45,13 +45,10 @@ namespace NSI.BusinessLogic.Implementations
                 CannedACL = S3CannedACL.PublicRead
             };
 
-            //uploadRequest.UploadProgressEvent += (s, args) => System.Diagnostics.Debug.WriteLine(args.PercentDone);
-
-            await using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-
-            await using (memoryStream)
+            await using (var memoryStream = new MemoryStream())
             {
+                await file.CopyToAsync(memoryStream);
+                
                 uploadRequest.InputStream = memoryStream;
                 var fileTransferUtility = new TransferUtility(_client);
                 await fileTransferUtility.UploadAsync(uploadRequest);

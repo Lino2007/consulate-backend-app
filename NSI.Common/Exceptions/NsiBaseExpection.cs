@@ -8,27 +8,27 @@ namespace NSI.Common.Exceptions
     [Serializable]
     public abstract class NsiBaseException : Exception
     {
-        public NsiBaseException()
+        protected NsiBaseException()
         {
         }
 
-        public NsiBaseException(string message)
+        protected NsiBaseException(string message)
             : base(message)
         {
         }
 
-        public NsiBaseException(string message, Exception innerException)
+        protected NsiBaseException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        public NsiBaseException(string message, Severity severity)
+        protected NsiBaseException(string message, Severity severity)
             : base(message)
         {
             this.Severity = severity;
         }
 
-        public NsiBaseException(string message, Exception innerException, Severity severity)
+        protected NsiBaseException(string message, Exception innerException, Severity severity)
             : base(message, innerException)
         {
             this.Severity = severity;

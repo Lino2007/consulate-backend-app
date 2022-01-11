@@ -21,7 +21,6 @@ namespace NSI.Common.Collation
 
                 return pages;
             }
-            set { }
         }
     }
 }

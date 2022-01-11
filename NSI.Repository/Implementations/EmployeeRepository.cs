@@ -32,9 +32,9 @@ namespace NSI.Repository.Implementations
             return employees;
         }
 
-        public User SaveEmployee(User newEmployee)
+        public User SaveEmployee(User employee)
         {
-            var savedEmployee = _context.User.Add(newEmployee).Entity;
+            var savedEmployee = _context.User.Add(employee).Entity;
             var roleEmployee = _context.Role.FirstOrDefault(r => r.Name.Equals("Employee"));
             if (roleEmployee != null)
             {

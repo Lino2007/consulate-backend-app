@@ -12,8 +12,8 @@ namespace NSI.DataContracts.Request
 
         public string Reason { get; set; }
 
-        public IEnumerable<IFormFile> Attachments { get; } = Enumerable.Empty<IFormFile>();
+        public IEnumerable<IFormFile> Attachments { get; set; } = Enumerable.Empty<IFormFile>();
 
-        public string[] AttachmentTypes { get; } = { };
+        public string[] AttachmentTypes { get; set; } = { };
     }
 }

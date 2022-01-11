@@ -52,7 +52,7 @@ namespace NSI.Tests.ControllerTests
 
             var br = new BasicRequest();
             br.Paging = new Paging();
-            br.Paging.Pages = br.Paging.TotalRecords = br.Paging.RecordsPerPage = br.Paging.Page = 10;
+            br.Paging.TotalRecords = br.Paging.RecordsPerPage = br.Paging.Page = 10;
             var result = await requestController.GetRequestsWithPaging(br);
 
  
@@ -89,7 +89,7 @@ namespace NSI.Tests.ControllerTests
 
             var br = new BasicRequest();
             br.Paging = new Paging();
-            br.Paging.Pages = br.Paging.TotalRecords = br.Paging.RecordsPerPage = br.Paging.Page = 10;
+            br.Paging.TotalRecords = br.Paging.RecordsPerPage = br.Paging.Page = 10;
             var result = await requestController.GetRequestsByEmployeeId("id", br);
 
 

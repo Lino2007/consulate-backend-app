@@ -19,15 +19,15 @@ namespace NSI.Repository.Implementations
         /// <summary>
         /// The method that returns all attachments for list of requests.
         /// </summary>
-        public async Task<IList<Attachment>> GetAttachmentsByRequests(List<Request> RequestList)
+        public async Task<IList<Attachment>> GetAttachmentsByRequests(List<Request> req)
         {
         
-            if (RequestList == null || RequestList.Count == 0)
+            if (req == null || req.Count == 0)
             {
                 return null;
             }
 
-            var idList = RequestList.Select(x => x.Id).ToList();
+            var idList = req.Select(x => x.Id).ToList();
             var result = await (from att in _context.Attachment
                                  from dt in _context.DocumentType
                                  where idList.Contains(att.RequestId) && att.TypeId == dt.Id

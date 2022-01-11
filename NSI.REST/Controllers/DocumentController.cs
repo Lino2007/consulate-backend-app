@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSI.BusinessLogic.Interfaces;
 using NSI.Common.Enumerations;
+using NSI.Common.Utilities;
 using NSI.REST.Filters;
 
 namespace NSI.REST.Controllers
@@ -24,8 +25,6 @@ namespace NSI.REST.Controllers
         /// <summary>
         /// Get HTML validation page for document by id.
         /// </summary>
-        [Authorize]
-        [PermissionCheck("document:view")]
         [HttpGet("{id}")]
         public async Task<ContentResult> GetDocumentIfNotExpired([FromRoute] Guid id)
         {
@@ -67,7 +66,7 @@ namespace NSI.REST.Controllers
                               "position: absolute; background: lightgreen; font-size: 30px; font-family: Arial;\">" +
                               "<h1 style=\"margin: 50px;\">Document is VALID.</h1> " +
                               "<h5 style=\"margin: 50px; color: gray;\">Title: " + document.Title + "</h5>" +
-                              "<h5 style=\"margin: 50px; color: gray;\">Expiration Date: " + TimeZoneInfo.ConvertTimeFromUtc(document.DateOfExpiration, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")) +
+                              "<h5 style=\"margin: 50px; color: gray;\">Expiration Date: " + DateHelper.ConvertToLocalTimeZone(document.DateOfExpiration) +
                               "</h5>" +
                               "</div> " +
                               "</body> " +
@@ -85,7 +84,7 @@ namespace NSI.REST.Controllers
             } else if (document != null && status == DocumentStatus.Expired)
             {
                 statusText = "Document has EXPIRED.";
-                descriptionText = "Document expired at " + TimeZoneInfo.ConvertTimeFromUtc(document.DateOfExpiration, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+                descriptionText = "Document expired at " + DateHelper.ConvertToLocalTimeZone(document.DateOfExpiration);
             } else if (document != null && status == DocumentStatus.Invalid)
             {
                 statusText = "Document is INVALID.";

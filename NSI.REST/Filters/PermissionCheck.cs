@@ -30,19 +30,10 @@ namespace NSI.REST.Filters
             {
                 System.Diagnostics.Debug.WriteLine(permission);
             }
-            if (userPermissions != null)
-            {
-                if (!IsAuthorized(userPermissions, routePerm))
-                {
-                   context.Result = new StatusCodeResult(401);
-                   return;
-                }
 
-            }
-            else if (userPermissions == null && routePerm.Count > 0)
+            if (!IsAuthorized(userPermissions, routePerm))
             {
                 context.Result = new StatusCodeResult(401);
-                return;
             }
         }
 

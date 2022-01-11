@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NSI.BusinessLogic.Validators.Base
 {
-    public interface INsiValidator<T> where T : class
+    public interface INsiValidator<in T> where T : class
     {
         ValidationResult PreValidate(T instance);
         ValidationResult PostValidate(T instance, ValidationResult preValidationResult, ValidationResult validationResult);
