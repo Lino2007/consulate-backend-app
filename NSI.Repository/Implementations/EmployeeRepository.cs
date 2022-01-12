@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
 using NSI.DataContracts.Request;
@@ -88,6 +90,26 @@ namespace NSI.Repository.Implementations
             }
 
             return null;
+        }
+
+        public List<User> GetEmployeesAndUsers()
+        {
+            var employeesAndUsers = new List<User>();
+            foreach (var user in _context.User.ToList())
+            {
+                var userRole = _context.UserRole.FirstOrDefault(u => u.UserId.Equals(user.Id));
+                var role = _context.Role.FirstOrDefault(r => r.Id.Equals(userRole.RoleId));
+                if (role is { Name: "Employee" })
+                {
+                    employeesAndUsers.Add(user);
+                }
+                else if (role is { Name: "User" })
+                {
+                    employeesAndUsers.Add(user);
+                }
+            }
+
+            return employeesAndUsers;
         }
     }
 }

@@ -129,5 +129,32 @@ namespace NSI.REST.Controllers
                 Success = _employeeManipulation.DeleteEmployee(email)
             };
         }
+
+        /// <summary>
+        /// Gets all employees and users data (admin only).
+        /// </summary>
+        [Authorize]
+        [PermissionCheck("employee:view")]
+        [HttpGet]
+        [Route("employeesAndUsers")]
+        public BaseResponse<List<User>> GetAllEmployeesAndUsers()
+        {
+            if (!ModelState.IsValid)
+            {
+                return new BaseResponse<List<User>>
+                {
+                    Data = null,
+                    Error = ValidationHelper.ToErrorResponse(ModelState),
+                    Success = ResponseStatus.Failed
+                };
+            }
+
+            return new BaseResponse<List<User>>
+            {
+                Data = _employeeManipulation.GetAllEmployeesAndUsers(),
+                Error = ValidationHelper.ToErrorResponse(ModelState),
+                Success = ResponseStatus.Succeeded
+            };
+        }
     }
 }

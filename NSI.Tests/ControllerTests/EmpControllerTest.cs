@@ -66,5 +66,36 @@ namespace NSI.Tests.ControllerTests
             Assert.Equal(ResponseStatus.Failed, result.Success);
         }
 
+        [Fact]
+        public void EmpControllerTest4()
+        {
+            var empMock = new Mock<IEmployeeManipulation>();
+            empMock.Setup(EmpMockItem => EmpMockItem.GetAllEmployeesAndUsers()).Returns(() => null);
+            var empController = new EmployeeController(empMock.Object);
+
+            var result = empController.GetAllEmployeesAndUsers();
+
+            Assert.Null(result.Data);
+            Assert.Null(result.Error.Errors);
+            Assert.Equal(ResponseStatus.Succeeded, result.Success);
+        }
+
+        [Fact]
+        public void EmpControllerTest5()
+        {
+            var empMock = new Mock<IEmployeeManipulation>();
+            empMock.Setup(MockItem => MockItem.GetAllEmployeesAndUsers()).Returns(() => {
+                List<User> users = new List<User>();
+                return users;
+            });
+            var empController = new EmployeeController(empMock.Object);
+
+            var result = empController.GetAllEmployeesAndUsers();
+
+            Assert.NotNull(result.Data);
+            Assert.Null(result.Error.Errors);
+            Assert.Equal(ResponseStatus.Succeeded, result.Success);
+        }
+
     }
 }

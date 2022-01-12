@@ -120,5 +120,62 @@ namespace NSI.Tests.ManipulationTests
 
         }
 
+        [Fact]
+        public void GetAllEmployeesAndUsers_ReturnsAllEmployeesAndUsers()
+        {
+            // Arrange
+            var employeeMock = new Mock<IEmployeeRepository>();
+            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() => {
+                List<User> users = new List<User>();
+                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+                return users;
+            });
+            var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
+
+            // Act
+            var result = employeeManipulation.GetAllEmployeesAndUsers();
+
+            // Assert
+            Assert.Equal(1, result.Count);
+
+        }
+
+        [Fact]
+        public void GetAllEmployeesAndUsers_ReturnsNoEmployeesAndUsers()
+        {
+            // Arrange
+            var employeeMock = new Mock<IEmployeeRepository>();
+            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() => {
+                List<User> users = new List<User>();
+                return users;
+            });
+            var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
+
+            // Act
+            var result = employeeManipulation.GetAllEmployeesAndUsers();
+
+            // Assert
+            Assert.Equal(0, result.Count);
+
+        }
+
+        [Fact]
+        public void GetAllEmployeesAndUsers_ReturnsAllEmployeesAndUsersNull()
+        {
+            // Arrange
+            var employeeMock = new Mock<IEmployeeRepository>();
+            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() => {
+                return null;
+            });
+            var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
+
+            // Act
+            var result = employeeManipulation.GetAllEmployeesAndUsers();
+
+            // Assert
+            Assert.Null(result);
+
+        }
+
     }
 }

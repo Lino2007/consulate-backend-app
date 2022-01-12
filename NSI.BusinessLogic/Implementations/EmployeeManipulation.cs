@@ -43,5 +43,10 @@ namespace NSI.BusinessLogic.Implementations
         {
             return _employeeRepository.UpdateEmployee(mail, newEmployeeRequest);
         }
+
+        public List<User> GetAllEmployeesAndUsers()
+        {
+            return _employeeRepository.GetEmployeesAndUsers();
+        }
     }
 }

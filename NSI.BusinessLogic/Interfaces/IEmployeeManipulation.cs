@@ -14,5 +14,7 @@ namespace NSI.BusinessLogic.Interfaces
         ResponseStatus DeleteEmployee(string email);
         
         User UpdateEmployee(string mail, UpdateEmployeeRequest newEmployeeRequest);
+
+        List<User> GetAllEmployeesAndUsers();
     }
 }
