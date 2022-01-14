@@ -23,11 +23,17 @@ namespace NSI.Repository.Implementations
             var employees = new List<User>();
             foreach (var user in _context.User.ToList())
             {
-                var userRole = _context.UserRole.FirstOrDefault(u => u.UserId.Equals(user.Id));
-                var role = _context.Role.FirstOrDefault(r => r.Id.Equals(userRole.RoleId));
-                if (role is {Name: "Employee"})
+                var userRoles = _context.UserRole
+                    .Where(r => r.UserId.Equals(user.Id))
+                    .ToList();
+
+                foreach (var userRole in userRoles)
                 {
-                    employees.Add(user);
+                    var role = _context.Role.FirstOrDefault(r => r.Id.Equals(userRole.RoleId));
+                    if (role is {Name: "Employee"})
+                    {
+                        employees.Add(user);
+                    }
                 }
             }
 
