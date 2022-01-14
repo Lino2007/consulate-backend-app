@@ -136,7 +136,7 @@ namespace NSI.REST.Controllers
         [Authorize]
         [PermissionCheck("employee:view")]
         [HttpGet]
-        [Route("employeesAndUsers")]
+        [Route("all")]
         public BaseResponse<List<User>> GetAllEmployeesAndUsers()
         {
             if (!ModelState.IsValid)
