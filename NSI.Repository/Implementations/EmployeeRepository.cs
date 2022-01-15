@@ -23,16 +23,19 @@ namespace NSI.Repository.Implementations
             var employees = new List<User>();
             foreach (var user in _context.User.ToList())
             {
-                var userRoles = _context.UserRole
-                    .Where(r => r.UserId.Equals(user.Id))
-                    .ToList();
-
-                foreach (var userRole in userRoles)
+                if (user.Active)
                 {
-                    var role = _context.Role.FirstOrDefault(r => r.Id.Equals(userRole.RoleId));
-                    if (role is {Name: "Employee"})
+                    var userRoles = _context.UserRole
+                        .Where(r => r.UserId.Equals(user.Id))
+                        .ToList();
+
+                    foreach (var userRole in userRoles)
                     {
-                        employees.Add(user);
+                        var role = _context.Role.FirstOrDefault(r => r.Id.Equals(userRole.RoleId));
+                        if (role is {Name: "Employee"})
+                        {
+                            employees.Add(user);
+                        }
                     }
                 }
             }
@@ -62,12 +65,7 @@ namespace NSI.Repository.Implementations
                 return ResponseStatus.Failed;
             }
 
-            var userRole = _context.UserRole.FirstOrDefault(ur => ur.UserId.Equals(employee.Id));
-            _context.User.Remove(employee);
-            if (userRole != null)
-            {
-                _context.UserRole.Remove(userRole);
-            }
+            employee.Active = false;
 
             _context.SaveChanges();
             return ResponseStatus.Succeeded;
@@ -100,7 +98,10 @@ namespace NSI.Repository.Implementations
 
         public List<User> GetEmployeesAndUsers()
         {
-            return _context.User.ToList();
+            var users = _context.User
+                .Where(u => u.Active)
+                .ToList();
+            return users;
         }
     }
 }
