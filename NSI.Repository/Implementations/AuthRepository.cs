@@ -15,7 +15,7 @@ namespace NSI.Repository.Implementations
         
         public User GetByEmail(string email)
         {
-            return _context.User.FirstOrDefault(u => u.Email.Equals(email));
+            return _context.User.FirstOrDefault(u => u.Email.Equals(email) && u.Active);
         }
     }
 }

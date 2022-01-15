@@ -20,12 +20,12 @@ namespace NSI.Repository.Implementations
         
         public User GetById(Guid id)
         {
-            return _context.User.First(u => u.Id.Equals(id));
+            return _context.User.First(u => u.Id.Equals(id) && u.Active);
         }
 
         public User GetByEmail(string email)
         {
-            return _context.User.First(u => u.Email.Equals(email));
+            return _context.User.First(u => u.Email.Equals(email) && u.Active);
         }
 
         public User SaveUser(User user)
@@ -45,33 +45,29 @@ namespace NSI.Repository.Implementations
 
         public ResponseStatus RemoveUser(string email)
         {
-            User user = _context.User.FirstOrDefault(u => u.Email.Equals(email)); 
+            User user = _context.User.FirstOrDefault(u => u.Email.Equals(email));
 
-            if (user != null)
-            {
-                UserRole userRole = _context.UserRole.FirstOrDefault(ur => ur.UserId.Equals(user.Id));
-                _context.User.Remove(user);
-                _context.UserRole.Remove(userRole);
-                _context.SaveChanges();
-                return ResponseStatus.Succeeded;
-            }
-            else
+            if (user == null)
             {
                 return ResponseStatus.Failed;
             }
+            
+            user.Active = false;
+            _context.SaveChanges();
+            return ResponseStatus.Succeeded;
         }
 
         public async Task<IList<User>> GetUsersAsync()
         {
             return await _context.UserRole
-                .Where(ur => ur.Role.Name.Equals("User"))
+                .Where(ur => ur.Role.Name.Equals("User") && ur.User.Active)
                 .Select(ur => ur.User)
                 .ToListAsync();
         }
 
         public async Task<IList<User>> GetAllPersonAsync()
         {
-            return await _context.User.ToListAsync();
+            return await _context.User.Where(u => u.Active).ToListAsync();
         }
     }
 }
