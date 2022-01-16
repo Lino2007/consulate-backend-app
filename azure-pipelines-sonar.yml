@@ -28,6 +28,8 @@ steps:
     projectName: 'NSI.Service.Echo'
     extraProperties: |
       sonar.exclusions=**/*.bin,NSI.REST/appsettings.json
+      sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/coverage/*.xml
+      sonar.coverage.jacoco.xmlReportPaths=${Agent.TempDirectory}/coverage/*.xml
 
 - task: DotNetCoreCLI@2
   displayName: Restore
