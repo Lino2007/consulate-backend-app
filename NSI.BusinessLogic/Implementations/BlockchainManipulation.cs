@@ -26,6 +26,7 @@ namespace NSI.BusinessLogic.Implementations
         private readonly string _clientId;
         private readonly string _scope;
         private readonly string _storageBaseUrl;
+        private readonly IConfigurationSection _privateKey;
 
         public BlockchainManipulation(IConfiguration configuration)
         {
@@ -35,12 +36,22 @@ namespace NSI.BusinessLogic.Implementations
             _clientId = configuration["Oasis:ClientId"];
             _scope = configuration["Oasis:Scope"];
             _storageBaseUrl = configuration["Oasis:StorageBaseUrl"];
+            _privateKey = configuration.GetSection("Oasis:PrivateKey");
         }
 
         private string MakeToken()
         {
-            var path = PathHelper.GetPathFromBase("NSI.Resources", "Oasis", "oasis.json");
-            var jwk = new JsonWebKey(File.ReadAllText(path));
+            JsonWebKey jwk = new JsonWebKey
+            {
+                Kty = _privateKey["kty"],
+                Kid = _privateKey["kid"],
+                Use = _privateKey["use"],
+                Alg = _privateKey["alg"],
+                Crv = _privateKey["crv"],
+                X = _privateKey["x"],
+                Y = _privateKey["y"],
+                D = _privateKey["d"]
+            };
 
             var timestamp = Convert.ToInt32((DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds);
             var token = new JwtSecurityToken
