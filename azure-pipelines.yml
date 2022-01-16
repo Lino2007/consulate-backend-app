@@ -5,8 +5,6 @@
 
 trigger:
 - main
-- prod
-- uat
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -14,10 +12,6 @@ pool:
 variables:
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     buildConfiguration: development
-  ${{ if eq(variables['Build.SourceBranchName'], 'uat') }}:
-    buildConfiguration: uat
-  ${{ if eq(variables['Build.SourceBranchName'], 'prod') }}:
-    buildConfiguration: production
 
 steps:
 - task: SonarCloudPrepare@1
@@ -30,6 +24,8 @@ steps:
     extraProperties: |
       sonar.exclusions=**/*.bin,NSI.REST/appsettings.json
       sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+      sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/coverage/*.xml
+      sonar.coverage.jacoco.xmlReportPaths=${Agent.TempDirectory}/coverage/*.xml
 
 - task: DotNetCoreCLI@2
   displayName: Restore
