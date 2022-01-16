@@ -1,0 +1,74 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    buildConfiguration: development
+
+steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'NSI-Sonar-Echo'
+    organization: 'nsi-1'
+    scannerMode: 'MSBuild'
+    projectKey: 'NSI_NSI.Service.Echo'
+    projectName: 'NSI.Service.Echo'
+    extraProperties: |
+      sonar.exclusions=**/*.bin,NSI.REST/appsettings.json
+      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+      sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/coverage/*.xml
+      sonar.coverage.jacoco.xmlReportPaths=${Agent.TempDirectory}/coverage/*.xml
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: '**/*.csproj'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Execute Tests'
+  inputs:
+    command: test
+    projects: '**/NSI.Tests/*.csproj'
+    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" --logger "trx;LogFileName=unittests.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/'
+    testRunTitle: 'Tests for $(Build.BuildNumber)'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '60'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+
+#- script: dotnet build --configuration $(buildConfiguration)
+#  displayName: 'dotnet build $(buildConfiguration)'
+#
+#- task: UseDotNet@2
+#  displayName: 'Install .NET Core SDK'
+#  inputs:
+#    version: 5.x
+#    performMultiLevelLookup: True
