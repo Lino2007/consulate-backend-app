@@ -70,19 +70,21 @@ namespace NSI.Repository.Implementations
 
         public async Task<IList<Permission>> GetPermissionsByUserId(Guid id)
         {
-            var roleName = _context.UserRole
+            var roleIds = _context.UserRole
                 .Where(r => r.UserId.Equals(id))
-                .Select(r => r.Role.Name)
-                .First();
+                .Select(r => r.Role.Id);
 
-            return await GetPermissionsAsync(roleName);
+            return await _context.RolePermission
+                .Where(r => roleIds.Contains(r.Role.Id))
+                .Select(r => r.Permission)
+                .Distinct()
+                .ToListAsync();
         }
 
         private RolePermission FindRolePermission(RolePermission rolePermission)
         {
             return _context.RolePermission
-                .Where(rp => rp.RoleId.Equals(rolePermission.RoleId) && rp.PermissionId.Equals(rolePermission.PermissionId))
-                .SingleOrDefault();
+                .SingleOrDefault(rp => rp.RoleId.Equals(rolePermission.RoleId) && rp.PermissionId.Equals(rolePermission.PermissionId));
         }
     }
 }
