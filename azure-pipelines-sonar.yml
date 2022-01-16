@@ -56,6 +56,15 @@ steps:
   inputs:
     pollingTimeoutSec: '60'
 
+# Archive files
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
