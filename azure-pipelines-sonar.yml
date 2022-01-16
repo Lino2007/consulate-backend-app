@@ -3,11 +3,15 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-trigger:
-  batch: true
+schedules:
+- cron: "0 17 * * *"
+  displayName: Daily Sonar scan
   branches:
     include:
     - main
+
+trigger:
+  batch: true
 
 pool:
   vmImage: 'ubuntu-latest'
