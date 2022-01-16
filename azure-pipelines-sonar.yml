@@ -12,7 +12,7 @@ schedules:
     - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 variables:
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
