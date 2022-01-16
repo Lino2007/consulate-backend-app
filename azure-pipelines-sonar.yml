@@ -6,12 +6,10 @@
 schedules:
 - cron: "0 17 * * *"
   displayName: Daily Sonar scan
+  batch: true
   branches:
     include:
     - main
-
-trigger:
-  batch: true
 
 pool:
   vmImage: 'ubuntu-latest'
