@@ -44,14 +44,6 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" --logger "trx;LogFileName=unittests.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/'
     testRunTitle: 'Tests for $(Build.BuildNumber)'
 
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'XUnit'
-    testResultsFiles: 'test/test-*.xml'
-    mergeTestResults: true
-    testRunTitle: 'Tests for $(Build.BuildNumber)'
-    buildConfiguration: '$(BuildConfiguration)'
-
 - task: SonarCloudAnalyze@1
 
 - task: SonarCloudPublish@1
