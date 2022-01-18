@@ -27,7 +27,7 @@ steps:
     projectKey: 'NSI_NSI.Service.Echo'
     projectName: 'NSI.Service.Echo'
     extraProperties: |
-      sonar.exclusions=**/*.bin,NSI.REST/appsettings.json,NSI.REST/Startup.cs,NSI.REST/Program.cs,NSI.REST/Filters/**,NSI.Logger/**
+      sonar.exclusions=**/*.bin,NSI.REST/appsettings.json,NSI.REST/Startup.cs,NSI.REST/Program.cs,NSI.REST/Filters/**,NSI.Logger/**,NSI.Common/Encryption/CryptographyHelper.cs,NSI.DataContracts/Dto/**,NSI.Common/Exceptions/**
       sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/coverage/*.xml
       sonar.coverage.jacoco.xmlReportPaths=${Agent.TempDirectory}/coverage/*.xml
 
