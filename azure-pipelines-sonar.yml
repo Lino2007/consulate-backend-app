@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 schedules:
-- cron: "0 17 * * *"
+- cron: "0 8 * * *"
   displayName: Daily Sonar scan
   batch: true
   branches:
@@ -27,7 +27,7 @@ steps:
     projectKey: 'NSI_NSI.Service.Echo'
     projectName: 'NSI.Service.Echo'
     extraProperties: |
-      sonar.exclusions=**/*.bin,NSI.REST/appsettings.json
+      sonar.exclusions=**/*.bin,NSI.REST/appsettings.json,NSI.REST/Startup.cs,NSI.REST/Program.cs,NSI.REST/Filters/**,NSI.Logger/**
       sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/coverage/*.xml
       sonar.coverage.jacoco.xmlReportPaths=${Agent.TempDirectory}/coverage/*.xml
 
