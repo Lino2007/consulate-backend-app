@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NSI.Common.Enumerations
 {
@@ -10,7 +11,8 @@ namespace NSI.Common.Enumerations
         UsrDelete, DocCreate, DocView,
         ReqView, ReqCreate, ProView, EmpView
     }
-
+    
+    [ExcludeFromCodeCoverage]
     public static class PermissionEnumExtension {
 
         private static readonly List<string> enumNames = new List<string>

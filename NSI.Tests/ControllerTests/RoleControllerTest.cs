@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using Moq;
 using NSI.BusinessLogic.Interfaces;
 using NSI.Cache.Interfaces;
 using NSI.REST.Controllers;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using NSI.DataContracts.Request;
 using NSI.Common.DataContracts.Enumerations;
 

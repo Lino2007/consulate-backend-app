@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 using NSI.Common.DataContracts.Base;
 
 namespace NSI.DataContracts.Models
 {
+    [ExcludeFromCodeCoverage]
     public class WorkItemDto : BaseModelDto
     {
         public new int? Id { get; set; }

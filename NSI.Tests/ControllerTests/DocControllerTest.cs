@@ -2,8 +2,6 @@
 using NSI.BusinessLogic.Interfaces;
 using NSI.DataContracts.Response;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using NSI.DataContracts.Models;

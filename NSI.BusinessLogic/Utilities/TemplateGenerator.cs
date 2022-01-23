@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using NSI.Common.Utilities;
 using NSI.DataContracts.Models;
 
 namespace NSI.BusinessLogic.Utilities
 {
+   [ExcludeFromCodeCoverage]
     public static class TemplateGenerator
     {
         public static string GetPassportHtmlString(Document document, User user,  string qrImageBase64, string qrImageUrl)

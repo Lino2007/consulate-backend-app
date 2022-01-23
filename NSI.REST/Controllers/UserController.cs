@@ -21,18 +21,19 @@ namespace NSI.REST.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-
         private readonly IAuthManipulation _authManipulation;
 
         private readonly IUsersManipulation _usersManipulation;
 
         private readonly IPermissionsManipulation _permissionsManipulation;
-        
+
         private readonly IDocumentsManipulation _documentsManipulation;
 
         private readonly ICacheProvider _cacheProvider;
 
-        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation, IPermissionsManipulation permissionsManipulation, IDocumentsManipulation documentsManipulation, ICacheProvider cacheProvider)
+        public UserController(IAuthManipulation authManipulation, IUsersManipulation usersManipulation,
+            IPermissionsManipulation permissionsManipulation, IDocumentsManipulation documentsManipulation,
+            ICacheProvider cacheProvider)
         {
             _authManipulation = authManipulation;
             _usersManipulation = usersManipulation;
@@ -47,7 +48,7 @@ namespace NSI.REST.Controllers
         [HttpGet]
         public BaseResponse<Role> GetUserRoleFromEmail([FromQuery(Name = "email")] string email)
         {
-            if (!ModelState.IsValid || email == null || !new EmailAddressAttribute().IsValid(email)) 
+            if (!ModelState.IsValid || email == null || !new EmailAddressAttribute().IsValid(email))
             {
                 return new BaseResponse<Role>
                 {
@@ -84,7 +85,7 @@ namespace NSI.REST.Controllers
 
             if (!new EmailAddressAttribute().IsValid(request.Email) || request.Email == null ||
                 request.FirstName == null || request.LastName == null || request.Username == null ||
-                request.PlaceOfBirth == null || request.Country == null) 
+                request.PlaceOfBirth == null || request.Country == null)
             {
                 return new BaseResponse<User>()
                 {
@@ -94,10 +95,10 @@ namespace NSI.REST.Controllers
                 };
             }
 
-           if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null)
-           {
+            if (_cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission") != null)
+            {
                 _cacheProvider.Get<Dictionary<string, List<PermissionEnum>>>("userPermission").Clear();
-           }
+            }
 
             return new BaseResponse<User>()
             {
@@ -155,7 +156,7 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
-        
+
         /// <summary>
         /// Gets all permissions from user.
         /// </summary>
@@ -175,12 +176,13 @@ namespace NSI.REST.Controllers
 
             return new PermissionsResponse()
             {
-                Data = await _permissionsManipulation.GetPermissionsByUserId(_usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id),
+                Data = await _permissionsManipulation.GetPermissionsByUserId(_usersManipulation
+                    .GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
             };
         }
-        
+
         /// <summary>
         /// Gets all documents from user.
         /// </summary>
@@ -201,7 +203,8 @@ namespace NSI.REST.Controllers
 
             return new DocumentResponse()
             {
-                Data = await _documentsManipulation.GetDocumentsByUserIdAndType(_usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id, type),
+                Data = await _documentsManipulation.GetDocumentsByUserIdAndType(
+                    _usersManipulation.GetByEmail(AuthHelper.GetRequestEmail(HttpContext)).Id, type),
                 Error = ValidationHelper.ToErrorResponse(ModelState),
                 Success = ResponseStatus.Succeeded
             };

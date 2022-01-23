@@ -91,7 +91,7 @@ namespace NSI.Tests.ManipulationTests
             reqMock.Setup(MockItem => MockItem.SaveRequest(new Request(new Guid(), "reason", RequestType.Visa)))
                 .Returns(() => { return new Request(new Guid(), "reason", RequestType.Visa); });
             var attchMock = new Mock<IAttachmentRepository>();
-            attchMock.Setup(MockItem => MockItem.SaveAttachment(new Attachment(new Guid(), new Guid()))).Returns(() =>
+            attchMock.Setup(MockItem => MockItem.SaveAttachment(new Attachment(new Guid(), new Guid(), ""))).Returns(() =>
             {
                 return new Attachment(new Guid(), new Guid());
             });

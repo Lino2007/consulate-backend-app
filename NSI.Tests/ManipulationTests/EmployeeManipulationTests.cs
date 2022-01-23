@@ -7,7 +7,6 @@ using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace NSI.Tests.ManipulationTests
@@ -99,9 +98,7 @@ namespace NSI.Tests.ManipulationTests
             var result = employeeManipulation.DeleteEmployee("alakovic1@etf.unsa.ba");
 
             // Assert
-            Assert.NotNull(result);
             Assert.Equal(ResponseStatus.Succeeded, result);
-
         }
 
         [Fact]

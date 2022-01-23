@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NSI.Common.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class ListExtension
     {
         /// <summary>

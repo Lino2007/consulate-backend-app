@@ -106,8 +106,6 @@ namespace NSI.Repository.Implementations
 
         public async Task<IList<Role>> GetRolesByUserId(Guid userId)
         {
-            UserRole userRole = _context.UserRole.FirstOrDefault(u => u.UserId.Equals(userId));
-
             return await _context.UserRole
                 .Where(ur => ur.User.Id.Equals(userId))
                 .Select(ur => ur.Role)

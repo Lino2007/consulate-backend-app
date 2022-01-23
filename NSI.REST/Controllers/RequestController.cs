@@ -39,7 +39,8 @@ namespace NSI.REST.Controllers
         public RequestController(IRequestsManipulation requestsManipulation,
             IUsersManipulation usersManipulation, IPdfManipulation pdfManipulation,
             IDocumentsManipulation documentsManipulation, IDocumentTypesManipulation documentTypesManipulation,
-            IFilesManipulation filesManipulation, IConfiguration configuration, IBlockchainManipulation blockchainManipulation)
+            IFilesManipulation filesManipulation, IConfiguration configuration,
+            IBlockchainManipulation blockchainManipulation)
         {
             _requestsManipulation = requestsManipulation;
             _usersManipulation = usersManipulation;
@@ -246,7 +247,8 @@ namespace NSI.REST.Controllers
                 IFormFile file = new FormFile(stream, 0, fileBytes.Length, "document", document.Id + ".pdf");
                 string url = await _filesManipulation.UploadFile(file, document.Id.ToString());
                 var uploadedFileStream = await _filesManipulation.DownloadFile(Path.GetFileName(url));
-                string blockchainId = await _blockchainManipulation.UploadDocument(document.Id.ToString(), uploadedFileStream);
+                string blockchainId =
+                    await _blockchainManipulation.UploadDocument(document.Id.ToString(), uploadedFileStream);
                 document.Title = documentType.Name + " - " + requestUser.FirstName + " " + requestUser.LastName;
                 document.Url = url;
                 document.BlockchainId = blockchainId;
@@ -260,7 +262,7 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
-        
+
         [ExcludeFromCodeCoverage]
         private static byte[] ImageToByte(Image img)
         {

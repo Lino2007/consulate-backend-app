@@ -2,7 +2,6 @@
 using NSI.BusinessLogic.Interfaces;
 using NSI.Common.DataContracts.Enumerations;
 using NSI.Common.Enumerations;
-using NSI.Common.DataContracts.Base;
 using NSI.DataContracts.Models;
 using NSI.REST.Controllers;
 using System;

@@ -2,9 +2,6 @@
 using NSI.BusinessLogic.Implementations;
 using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace NSI.Tests.ManipulationTests

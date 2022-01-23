@@ -2,9 +2,7 @@
 using NSI.BusinessLogic.Implementations;
 using NSI.Common.Enumerations;
 using NSI.Repository.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace NSI.Tests.ManipulationTests

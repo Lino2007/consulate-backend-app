@@ -1,12 +1,10 @@
-﻿
-using Moq;
+﻿using Moq;
 using NSI.BusinessLogic.Implementations;
 using NSI.Common.DataContracts.Enumerations;
 using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using NSI.Common.Collation;
 using Xunit;
 
@@ -19,7 +17,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var rolesMock = new Mock<IRolesRepository>();
-            rolesMock.Setup(MockItem => MockItem.GetRolesAsync(new Guid())).ReturnsAsync(() => {
+            rolesMock.Setup(MockItem => MockItem.GetRolesAsync(new Guid())).ReturnsAsync(() =>
+            {
                 List<Role> roles = new List<Role>();
                 roles.Add(new Role("newRole"));
                 return roles;
@@ -31,7 +30,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Equal(1, result.Result.Count);
-
         }
 
         [Fact]
@@ -47,7 +45,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.NotNull(result);
-
         }
 
         [Fact]
@@ -63,7 +60,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
 
         [Fact]
@@ -78,9 +74,7 @@ namespace NSI.Tests.ManipulationTests
             var result = rolesManipulation.DeleteRole("12345678-1234-1234-1234-123456789999");
 
             // Assert
-            Assert.NotNull(result);
             Assert.Equal(ResponseStatus.Failed, result);
-
         }
 
         [Fact]
@@ -88,7 +82,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var rolesMock = new Mock<IRolesRepository>();
-            rolesMock.Setup(MockItem => MockItem.SaveRoleToUser(new UserRole(new Guid(), new Guid()))).Returns(new UserRole(new Guid(), new Guid()));
+            rolesMock.Setup(MockItem => MockItem.SaveRoleToUser(new UserRole(new Guid(), new Guid())))
+                .Returns(new UserRole(new Guid(), new Guid()));
             var rolesManipulation = new RolesManipulation(rolesMock.Object);
 
             // Act
@@ -96,7 +91,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
 
         [Fact]
@@ -111,9 +105,7 @@ namespace NSI.Tests.ManipulationTests
             var result = rolesManipulation.RemoveRoleFromUser(new Guid(), new Guid());
 
             // Assert
-            Assert.NotNull(result);
             Assert.Equal(ResponseStatus.Failed, result);
-
         }
     }
 }

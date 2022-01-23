@@ -5,7 +5,6 @@ using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using NSI.Common.Collation;
 using Xunit;
 
@@ -97,7 +96,6 @@ namespace NSI.Tests.ManipulationTests
             var result = permissionsManipulation.RemovePermissionFromRole(new Guid(), new Guid());
 
             // Assert
-            Assert.NotNull(result);
             Assert.Equal(ResponseStatus.Failed, result);
         }
 

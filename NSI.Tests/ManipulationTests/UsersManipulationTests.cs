@@ -7,7 +7,6 @@ using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using NSI.Common.Collation;
 using Xunit;
 
@@ -15,13 +14,13 @@ namespace NSI.Tests.ManipulationTests
 {
     public class UsersManipulationTests
     {
-
         [Fact]
         public void GetUserInformationById_CorrectEmail_ReturnsUser()
         {
             // Arrange
             var usersMock = new Mock<IUsersRepository>();
-            usersMock.Setup(MockItem => MockItem.GetById(new Guid())).Returns(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+            usersMock.Setup(MockItem => MockItem.GetById(new Guid())).Returns(new User("Amila", "Lakovic",
+                Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
             var usersManipulation = new UsersManipulation(usersMock.Object);
 
             // Act
@@ -32,7 +31,6 @@ namespace NSI.Tests.ManipulationTests
             Assert.NotNull(result.Username);
             Assert.Equal("Amila", result.FirstName);
             Assert.Equal("alakovic1@etf.unsa.ba", result.Email);
-
         }
 
         [Fact]
@@ -40,7 +38,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var usersMock = new Mock<IUsersRepository>();
-            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Amila",
+                "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
             var usersManipulation = new UsersManipulation(usersMock.Object);
 
             // Act
@@ -51,7 +50,6 @@ namespace NSI.Tests.ManipulationTests
             Assert.NotNull(result.Username);
             Assert.Equal("Amila", result.FirstName);
             Assert.Equal("alakovic1@etf.unsa.ba", result.Email);
-
         }
 
         [Fact]
@@ -59,7 +57,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var usersMock = new Mock<IUsersRepository>();
-            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Amila",
+                "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
             var usersManipulation = new UsersManipulation(usersMock.Object);
 
             // Act
@@ -74,7 +73,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var usersMock = new Mock<IUsersRepository>();
-            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Amila",
+                "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
             var usersManipulation = new UsersManipulation(usersMock.Object);
 
             // Act
@@ -85,13 +85,14 @@ namespace NSI.Tests.ManipulationTests
             // Assert
             Assert.Null(result);
         }
-        
+
         [Fact]
         public void GetNewUser_UserRequestGenderIsNumberNull_ReturnsNull()
         {
             // Arrange
             var usersMock = new Mock<IUsersRepository>();
-            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Lino", "Bevanda", Gender.Male, "lbevanda1@etf.unsa.ba", "lbevanda1", "Sarajevo", DateTime.Now, "BiH"));
+            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Lino",
+                "Bevanda", Gender.Male, "lbevanda1@etf.unsa.ba", "lbevanda1", "Sarajevo", DateTime.Now, "BiH"));
             var usersManipulation = new UsersManipulation(usersMock.Object);
 
             // Act
@@ -116,7 +117,6 @@ namespace NSI.Tests.ManipulationTests
             var result = usersManipulation.RemoveUser("alakovic1@etf.unsa.ba");
 
             // Assert
-            Assert.NotNull(result);
             Assert.Equal(ResponseStatus.Succeeded, result);
         }
 
@@ -125,9 +125,11 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var usersMock = new Mock<IUsersRepository>();
-            usersMock.Setup(MockItem => MockItem.GetUsersAsync()).ReturnsAsync(() => {
+            usersMock.Setup(MockItem => MockItem.GetUsersAsync()).ReturnsAsync(() =>
+            {
                 List<User> users = new List<User>();
-                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"));
                 return users;
             });
             var usersManipulation = new UsersManipulation(usersMock.Object);
@@ -137,7 +139,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Equal(1, result.Result.Count);
-
         }
 
         [Fact]
@@ -153,7 +154,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.NotNull(result);
-
         }
 
         [Fact]
@@ -161,9 +161,11 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var usersMock = new Mock<IUsersRepository>();
-            usersMock.Setup(MockItem => MockItem.GetAllPersonAsync()).ReturnsAsync(() => {
+            usersMock.Setup(MockItem => MockItem.GetAllPersonAsync()).ReturnsAsync(() =>
+            {
                 List<User> users = new List<User>();
-                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"));
                 return users;
             });
             var usersManipulation = new UsersManipulation(usersMock.Object);
@@ -173,7 +175,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Equal(1, result.Result.Count);
-
         }
 
         [Fact]
@@ -189,7 +190,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.NotNull(result);
-
         }
     }
 }
