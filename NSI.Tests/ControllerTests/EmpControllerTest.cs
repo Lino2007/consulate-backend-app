@@ -96,6 +96,68 @@ namespace NSI.Tests.ControllerTests
             Assert.Null(result.Error.Errors);
             Assert.Equal(ResponseStatus.Succeeded, result.Success);
         }
+        
+        [Fact]
+        public void UpdateEmployeeFailedTest()
+        {
+            var empMock = new Mock<IEmployeeManipulation>();
+            var user = new User("Name", "Surname", Gender.Male, "email@etf.unsa.ba", "username1", "Cityy", DateTime.Now, "BiH");
+            empMock.Setup(EmpMockItem => EmpMockItem.SaveEmployee(null)).Returns(() => user);
+            var empController = new EmployeeController(empMock.Object);
 
+            var updateEmployeeRequest = new UpdateEmployeeRequest();
+            var result = empController.UpdateEmployee(updateEmployeeRequest, "lbevanda1@etf.unsa.ba");
+
+            Assert.Null(result.Data);
+            Assert.Equal(ResponseStatus.Failed, result.Success);
+        }
+        
+        [Fact]
+        public void UpdateEmployeeSucceededTest()
+        {
+            var empMock = new Mock<IEmployeeManipulation>();
+            var user = new User("Name", "Surname", Gender.Male, "email@etf.unsa.ba", "username1", "Cityy", DateTime.Now, "BiH");
+            empMock.Setup(EmpMockItem => EmpMockItem.SaveEmployee(null)).Returns(() => user);
+            var empController = new EmployeeController(empMock.Object);
+
+            var updateEmployeeRequest = new UpdateEmployeeRequest();
+            updateEmployeeRequest.FirstName = "Lino";
+            updateEmployeeRequest.LastName = "Bevanda";
+            updateEmployeeRequest.Gender = "Male";
+            updateEmployeeRequest.Username = "Lino";
+            updateEmployeeRequest.PlaceOfBirth = "Sarajevo";
+            updateEmployeeRequest.DateOfBirth = DateTime.Now;
+            updateEmployeeRequest.Country = "BiH";
+            var result = empController.UpdateEmployee(updateEmployeeRequest, "lbevanda1@etf.unsa.ba");
+
+            Assert.NotNull(result);
+            Assert.Equal(ResponseStatus.Succeeded, result.Success);
+        }
+        
+        [Fact]
+        public void DeleteEmployeeTest()
+        {
+            var empMock = new Mock<IEmployeeManipulation>();
+            var user = new User("Name", "Surname", Gender.Male, "email@etf.unsa.ba", "username1", "Cityy", DateTime.Now, "BiH");
+            empMock.Setup(EmpMockItem => EmpMockItem.SaveEmployee(null)).Returns(() => user);
+            var empController = new EmployeeController(empMock.Object);
+            
+            var result = empController.DeleteEmployee("lbevanda1@etf.unsa.ba");
+            
+            Assert.Equal(ResponseStatus.Failed, result.Success);
+        }
+        
+        [Fact]
+        public void DeleteEmployeeEmailNullTest()
+        {
+            var empMock = new Mock<IEmployeeManipulation>();
+            var user = new User("Name", "Surname", Gender.Male, "email@etf.unsa.ba", "username1", "Cityy", DateTime.Now, "BiH");
+            empMock.Setup(EmpMockItem => EmpMockItem.SaveEmployee(null)).Returns(() => user);
+            var empController = new EmployeeController(empMock.Object);
+            
+            var result = empController.DeleteEmployee(null);
+            
+            Assert.Equal(ResponseStatus.Failed, result.Success);
+        }
     }
 }

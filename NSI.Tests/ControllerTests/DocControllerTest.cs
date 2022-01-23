@@ -16,7 +16,7 @@ namespace NSI.Tests.ControllerTests
     public class DocControllerTest
     {
 
-        /*[Fact]
+        [Fact]
         public async Task GetDocumentIfNotExpired_ValidId_ReturnsValidDocument()
         {
             // Arrange
@@ -31,7 +31,7 @@ namespace NSI.Tests.ControllerTests
             // Assert
             Assert.Equal((int) HttpStatusCode.OK, result.StatusCode);
             Assert.Contains("Document is VALID.", result.Content);
-        }*/
+        }
 
         [Fact]
         public async Task GetDocumentIfNotExpired_InvalidId_ReturnsInvalid()
@@ -52,23 +52,23 @@ namespace NSI.Tests.ControllerTests
         }
 
 
-        /*[Fact]
-        public async Task GetDocumentIfNotExpired_ValidId_ReturnsExpired()
-        {
-            // Arrange
-            Guid id = Guid.NewGuid();
-            var docMock = new Mock<IDocumentsManipulation>();
-            docMock.Setup(MockItem => MockItem.GetDocumentWithStatus(id)).ReturnsAsync(new DocumentStatusResponse(new Document(id, new Guid(), DateTime.UtcNow, "url", "Valid document"), DocumentStatus.Expired));
-            var authController = new DocumentController(docMock.Object);
+         [Fact]
+         public async Task GetDocumentIfNotExpired_ValidId_ReturnsExpired()
+         {
+             // Arrange
+             Guid id = Guid.NewGuid();
+             var docMock = new Mock<IDocumentsManipulation>();
+             docMock.Setup(MockItem => MockItem.GetDocumentWithStatus(id)).ReturnsAsync(new DocumentStatusResponse(new Document(id, new Guid(), DateTime.UtcNow, "url", "Valid document"), DocumentStatus.Expired));
+             var authController = new DocumentController(docMock.Object);
 
-            // Act
-            var result = await authController.GetDocumentIfNotExpired(id);
+             // Act
+             var result = await authController.GetDocumentIfNotExpired(id);
 
-            // Assert
-            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Contains("Document has EXPIRED.", result.Content);
-            Assert.Contains("Document expired at ", result.Content);
-        }*/
+             // Assert
+             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+             Assert.Contains("Document has EXPIRED.", result.Content);
+             Assert.Contains("Document expired at ", result.Content);
+         }
 
         [Fact]
         public async Task GetDocumentIfNotExpired_ValidId_ReturnsInvalidHashErr()

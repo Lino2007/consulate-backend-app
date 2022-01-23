@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
@@ -188,6 +189,7 @@ namespace NSI.REST.Controllers
         [Authorize]
         [PermissionCheck("document:create")]
         [HttpPut]
+        [ExcludeFromCodeCoverage]
         public async Task<ReqResponse> UpdateRequest(ReqItemRequest req)
         {
             if (!ModelState.IsValid)
@@ -258,7 +260,8 @@ namespace NSI.REST.Controllers
                 Success = ResponseStatus.Succeeded
             };
         }
-
+        
+        [ExcludeFromCodeCoverage]
         private static byte[] ImageToByte(Image img)
         {
             ImageConverter converter = new ImageConverter();

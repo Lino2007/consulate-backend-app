@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 
 namespace NSI.Repository.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _context;

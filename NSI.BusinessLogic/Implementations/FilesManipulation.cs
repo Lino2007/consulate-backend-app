@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using Amazon.Runtime;
@@ -11,6 +12,7 @@ using NSI.BusinessLogic.Interfaces;
 
 namespace NSI.BusinessLogic.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class FilesManipulation : IFilesManipulation
     {
         private readonly string _endpointUrl;

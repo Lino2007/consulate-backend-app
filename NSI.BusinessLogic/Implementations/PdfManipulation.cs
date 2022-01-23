@@ -1,4 +1,5 @@
-﻿using DinkToPdf;
+﻿using System.Diagnostics.CodeAnalysis;
+using DinkToPdf;
 using DinkToPdf.Contracts;
 using NSI.BusinessLogic.Interfaces;
 using NSI.BusinessLogic.Utilities;
@@ -6,6 +7,7 @@ using NSI.DataContracts.Models;
 
 namespace NSI.BusinessLogic.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class PdfManipulation : IPdfManipulation
     {
         private readonly IConverter _converter;

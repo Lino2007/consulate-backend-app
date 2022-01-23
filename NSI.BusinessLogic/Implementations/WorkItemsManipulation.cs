@@ -3,6 +3,7 @@ using NSI.Common.Collation;
 using NSI.DataContracts.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using NSI.Repository.Interfaces;
@@ -11,6 +12,7 @@ using System.Linq;
 
 namespace NSI.BusinessLogic.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class WorkItemsManipulation : IWorkItemsManipulation
     {
         private readonly IWorkItemsRepository _workItemsRepository;

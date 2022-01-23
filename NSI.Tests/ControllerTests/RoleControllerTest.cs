@@ -58,5 +58,56 @@ namespace NSI.Tests.ControllerTests
             Assert.Null(result.Error.Errors);
             Assert.Equal(ResponseStatus.Succeeded, result.Success);
         }
+        
+        [Fact]
+        public void DeleteRoleTest()
+        {
+            var roleMock = new Mock<IRolesManipulation>();
+            var cacheMock = new Mock<ICacheProvider>();
+
+            roleMock.Setup(roleMock => roleMock.DeleteRole(null)).Returns(() => { return ResponseStatus.Succeeded; });
+            var roleController = new RoleController(roleMock.Object, cacheMock.Object);
+
+            var result = roleController.DeleteRole(new Guid().ToString());
+
+            Assert.Null(result.Error.Errors);
+            Assert.Equal(ResponseStatus.Failed, result.Success);
+        }
+        
+        [Fact]
+        public void SaveRoleToUserTest()
+        {
+            var roleMock = new Mock<IRolesManipulation>();
+            var cacheMock = new Mock<ICacheProvider>();
+
+            roleMock.Setup(roleMock => roleMock.DeleteRole(null)).Returns(() => { return ResponseStatus.Succeeded; });
+            var roleController = new RoleController(roleMock.Object, cacheMock.Object);
+
+            var userRoleRequest = new UserRoleRequest();
+            userRoleRequest.UserId = new Guid();
+            userRoleRequest.RoleId = new Guid();
+            var result = roleController.SaveRoleToUser(userRoleRequest);
+
+            Assert.Null(result.Error.Errors);
+            Assert.Equal(ResponseStatus.Succeeded, result.Success);
+        }
+        
+        [Fact]
+        public void RemoveRoleFromUserTest()
+        {
+            var roleMock = new Mock<IRolesManipulation>();
+            var cacheMock = new Mock<ICacheProvider>();
+
+            roleMock.Setup(roleMock => roleMock.DeleteRole(null)).Returns(() => { return ResponseStatus.Succeeded; });
+            var roleController = new RoleController(roleMock.Object, cacheMock.Object);
+
+            var userRoleRequest = new UserRoleRequest();
+            userRoleRequest.UserId = new Guid();
+            userRoleRequest.RoleId = new Guid();
+            var result = roleController.RemoveRoleFromUser(userRoleRequest);
+
+            Assert.Null(result.Error.Errors);
+            Assert.Equal(ResponseStatus.Failed, result.Success);
+        }
     }
 }

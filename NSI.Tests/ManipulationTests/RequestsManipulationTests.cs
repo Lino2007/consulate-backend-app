@@ -8,7 +8,7 @@ using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using NSI.Common.Collation;
 using Xunit;
 
 namespace NSI.Tests.ManipulationTests
@@ -20,7 +20,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var reqMock = new Mock<IRequestsRepository>();
-            reqMock.Setup(MockItem => MockItem.GetRequestsAsync()).ReturnsAsync(() => {
+            reqMock.Setup(MockItem => MockItem.GetRequestsAsync()).ReturnsAsync(() =>
+            {
                 List<Request> requests = new List<Request>();
                 requests.Add(new Request(new Guid(), "reason", RequestType.Passport));
                 return requests;
@@ -30,14 +31,14 @@ namespace NSI.Tests.ManipulationTests
             var docTMock = new Mock<IDocumentTypesRepository>();
             var cacheProviderMock = new Mock<ICacheProvider>();
             var filesMock = new Mock<IFilesManipulation>();
-            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object, docTMock.Object, cacheProviderMock.Object, filesMock.Object);
+            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object,
+                docTMock.Object, cacheProviderMock.Object, filesMock.Object);
 
             // Act
             var result = reqManipulation.GetRequestsAsync();
 
             // Assert
             Assert.Equal(1, result.Result.Count);
-
         }
 
         [Fact]
@@ -51,14 +52,14 @@ namespace NSI.Tests.ManipulationTests
             var docTMock = new Mock<IDocumentTypesRepository>();
             var cacheProviderMock = new Mock<ICacheProvider>();
             var filesMock = new Mock<IFilesManipulation>();
-            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object, docTMock.Object, cacheProviderMock.Object, filesMock.Object);
+            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object,
+                docTMock.Object, cacheProviderMock.Object, filesMock.Object);
 
             // Act
             var result = reqManipulation.GetRequestsAsync();
 
             // Assert
             Assert.NotNull(result);
-
         }
 
         [Fact]
@@ -72,14 +73,14 @@ namespace NSI.Tests.ManipulationTests
             var docTMock = new Mock<IDocumentTypesRepository>();
             var cacheProviderMock = new Mock<ICacheProvider>();
             var filesMock = new Mock<IFilesManipulation>();
-            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object, docTMock.Object, cacheProviderMock.Object, filesMock.Object);
+            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object,
+                docTMock.Object, cacheProviderMock.Object, filesMock.Object);
 
             // Act
             var result = reqManipulation.GetEmployeeRequestsAsync("id", null);
 
             // Assert
             Assert.NotNull(result);
-
         }
 
         [Fact]
@@ -87,24 +88,31 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var reqMock = new Mock<IRequestsRepository>();
-            reqMock.Setup(MockItem => MockItem.SaveRequest(new Request(new Guid(), "reason", RequestType.Visa))).Returns(() => { return new Request(new Guid(), "reason", RequestType.Visa); });
+            reqMock.Setup(MockItem => MockItem.SaveRequest(new Request(new Guid(), "reason", RequestType.Visa)))
+                .Returns(() => { return new Request(new Guid(), "reason", RequestType.Visa); });
             var attchMock = new Mock<IAttachmentRepository>();
-            attchMock.Setup(MockItem => MockItem.SaveAttachment(new Attachment(new Guid(), new Guid()))).Returns(() => { return new Attachment(new Guid(), new Guid()); });
-            attchMock.Setup(MockItem => MockItem.UpdateAttachment(new Attachment(new Guid(), new Guid()))).Returns(() => { return new Attachment(new Guid(), new Guid()); });
+            attchMock.Setup(MockItem => MockItem.SaveAttachment(new Attachment(new Guid(), new Guid()))).Returns(() =>
+            {
+                return new Attachment(new Guid(), new Guid());
+            });
+            attchMock.Setup(MockItem => MockItem.UpdateAttachment(new Attachment(new Guid(), new Guid()))).Returns(() =>
+            {
+                return new Attachment(new Guid(), new Guid());
+            });
             var docMock = new Mock<IDocumentRepository>();
             var docTMock = new Mock<IDocumentTypesRepository>();
             docTMock.Setup(MockItem => MockItem.GetByName("name")).Returns(() => { return new DocumentType("name"); });
             var cacheProviderMock = new Mock<ICacheProvider>();
             var filesMock = new Mock<IFilesManipulation>();
             filesMock.Setup(MockItem => MockItem.UploadFile(null, "id")).Returns(() => { return null; });
-            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object, docTMock.Object, cacheProviderMock.Object, filesMock.Object);
+            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object,
+                docTMock.Object, cacheProviderMock.Object, filesMock.Object);
 
             // Act
             var result = reqManipulation.SaveRequest(new Guid(), "reason", RequestType.Visa, null, null);
 
             // Assert
             Assert.NotNull(result);
-
         }
 
         [Fact]
@@ -112,26 +120,99 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var reqMock = new Mock<IRequestsRepository>();
-            reqMock.Setup(MockItem => MockItem.GetRequestsAsync()).ReturnsAsync(() => {
+            reqMock.Setup(MockItem => MockItem.GetRequestsAsync()).ReturnsAsync(() =>
+            {
                 List<Request> requests = new List<Request>();
                 requests.Add(new Request(new Guid(), "reason", RequestType.Passport));
                 return requests;
             });
-            reqMock.Setup(MockItem => MockItem.UpdateRequestAsync(new ReqItemRequest(), new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"))).ReturnsAsync(() => { return new Request(new Guid(), "reason", RequestType.Visa); });
+            reqMock.Setup(MockItem => MockItem.UpdateRequestAsync(new ReqItemRequest(),
+                new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"))).ReturnsAsync(() =>
+            {
+                return new Request(new Guid(), "reason", RequestType.Visa);
+            });
             var attchMock = new Mock<IAttachmentRepository>();
             var docMock = new Mock<IDocumentRepository>();
             var docTMock = new Mock<IDocumentTypesRepository>();
             var cacheProviderMock = new Mock<ICacheProvider>();
             var filesMock = new Mock<IFilesManipulation>();
-            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object, docTMock.Object, cacheProviderMock.Object, filesMock.Object);
+            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object,
+                docTMock.Object, cacheProviderMock.Object, filesMock.Object);
 
             // Act
-            var result = reqManipulation.UpdateRequestAsync(new ReqItemRequest(), new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+            var result = reqManipulation.UpdateRequestAsync(new ReqItemRequest(),
+                new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"));
 
             // Assert
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public void GetRequestPage_ReturnsNotNull()
+        {
+            // Arrange
+            var reqMock = new Mock<IRequestsRepository>();
+            reqMock.Setup(MockItem => MockItem.GetRequestsAsync()).ReturnsAsync(() =>
+            {
+                List<Request> requests = new List<Request>();
+                requests.Add(new Request(new Guid(), "reason", RequestType.Passport));
+                return requests;
+            });
+            reqMock.Setup(MockItem => MockItem.UpdateRequestAsync(new ReqItemRequest(),
+                new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"))).ReturnsAsync(() =>
+            {
+                return new Request(new Guid(), "reason", RequestType.Visa);
+            });
+            var attchMock = new Mock<IAttachmentRepository>();
+            var docMock = new Mock<IDocumentRepository>();
+            var docTMock = new Mock<IDocumentTypesRepository>();
+            var cacheProviderMock = new Mock<ICacheProvider>();
+            var filesMock = new Mock<IFilesManipulation>();
+            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object,
+                docTMock.Object, cacheProviderMock.Object, filesMock.Object);
 
+            // Act
+            var result = reqManipulation.GetRequestPage(new Paging());
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void CreateRequestItemDto_ReturnsNotNull()
+        {
+            // Arrange
+            var reqMock = new Mock<IRequestsRepository>();
+            reqMock.Setup(MockItem => MockItem.GetRequestsAsync()).ReturnsAsync(() =>
+            {
+                List<Request> requests = new List<Request>();
+                requests.Add(new Request(new Guid(), "reason", RequestType.Passport));
+                return requests;
+            });
+            reqMock.Setup(MockItem => MockItem.UpdateRequestAsync(new ReqItemRequest(),
+                new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"))).ReturnsAsync(() =>
+            {
+                return new Request(new Guid(), "reason", RequestType.Visa);
+            });
+            var attchMock = new Mock<IAttachmentRepository>();
+            var docMock = new Mock<IDocumentRepository>();
+            var docTMock = new Mock<IDocumentTypesRepository>();
+            var cacheProviderMock = new Mock<ICacheProvider>();
+            var filesMock = new Mock<IFilesManipulation>();
+            var reqManipulation = new RequestsManipulation(reqMock.Object, attchMock.Object, docMock.Object,
+                docTMock.Object, cacheProviderMock.Object, filesMock.Object);
+
+            // Act
+            List<Request> requests = new List<Request>();
+            requests.Add(new Request(new Guid(), "reason", RequestType.Passport));
+            var result = reqManipulation.CreateRequestItemDto(requests);
+
+            // Assert
+            Assert.NotNull(result);
+        }
     }
 }

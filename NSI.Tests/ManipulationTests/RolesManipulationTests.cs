@@ -7,6 +7,7 @@ using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NSI.Common.Collation;
 using Xunit;
 
 namespace NSI.Tests.ManipulationTests
@@ -42,7 +43,7 @@ namespace NSI.Tests.ManipulationTests
             var rolesManipulation = new RolesManipulation(rolesMock.Object);
 
             // Act
-            var result = rolesManipulation.GetRolesAsync(new Guid(), null, null, null);
+            var result = rolesManipulation.GetRolesAsync(new Guid(), new Paging(), null, null);
 
             // Assert
             Assert.NotNull(result);

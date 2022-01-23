@@ -68,5 +68,86 @@ namespace NSI.Tests.ControllerTests
 
             Assert.Equal(ResponseStatus.Failed, result.Success);
         }
+        
+        [Fact]
+        public void GetUsersTest()
+        {
+            var userMock = new Mock<IUsersManipulation>();
+            userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
+            var empController = new UserController(null, userMock.Object, null, null, null);
+
+            var result = empController.GetUsers(new BasicRequest());
+
+            Assert.NotNull(result);
+        }
+        
+        [Fact]
+        public void SaveNewUserTest()
+        {
+            var userMock = new Mock<IUsersManipulation>();
+            userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
+            var empController = new UserController(null, userMock.Object, null, null, null);
+
+            var result = empController.SaveNewUser(new NewUserRequest());
+
+            Assert.NotNull(result);
+        }
+        
+        [Fact]
+        public void SaveNewUserSucceededTest()
+        {
+            var userMock = new Mock<IUsersManipulation>();
+            userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
+            var empController = new UserController(null, userMock.Object, null, null, null);
+
+            var newUserRequest = new NewUserRequest();
+            newUserRequest.FirstName = "Lino";
+            newUserRequest.LastName = "Bevanda";
+            newUserRequest.Gender = 1;
+            newUserRequest.Email = "lbevanda1@etf.unsa.ba";
+            newUserRequest.Username = "Lino";
+            newUserRequest.PlaceOfBirth = "Sarajevo";
+            newUserRequest.DateOfBirth = DateTime.Now;
+            newUserRequest.Country = "BiH";
+            var result = empController.SaveNewUser(newUserRequest);
+
+            Assert.NotNull(result);
+        }
+        
+        [Fact]
+        public void GetPermissionsByUserIdTest()
+        {
+            var userMock = new Mock<IUsersManipulation>();
+            userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
+            var empController = new UserController(null, userMock.Object, null, null, null);
+
+            var result = empController.GetPermissionsByUserId();
+
+            Assert.NotNull(result);
+        }
+        
+        [Fact]
+        public void GetDocumentsByUserIdAndTypeTest()
+        {
+            var userMock = new Mock<IUsersManipulation>();
+            userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
+            var empController = new UserController(null, userMock.Object, null, null, null);
+
+            var result = empController.GetDocumentsByUserIdAndType("type");
+
+            Assert.NotNull(result);
+        }
+        
+        [Fact]
+        public void GetUserRolesFromEmailTest()
+        {
+            var userMock = new Mock<IUsersManipulation>();
+            userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
+            var empController = new UserController(null, userMock.Object, null, null, null);
+
+            var result = empController.GetUserRolesFromEmail("lbevanda1@etf.unsa.ba");
+
+            Assert.NotNull(result);
+        }
     }
 }

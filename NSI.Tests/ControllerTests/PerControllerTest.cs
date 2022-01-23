@@ -58,7 +58,37 @@ namespace NSI.Tests.ControllerTests
              
             }
             Assert.Null(result);
+        }
+        
+        [Fact]
+        public void SavePermissionToRole()
+        {
 
+            var permMock = new Mock<IPermissionsManipulation>();
+            var cacheMock = new Mock<ICacheProvider>();
+            var permissionList = new List<Permission>() { null };
+            permMock.Setup(PermMockItem => PermMockItem.GetPermissionsAsync(null, null, null, null)).ReturnsAsync(permissionList);
+            var permissionController = new PermissionController(permMock.Object, cacheMock.Object);
+
+            var result = permissionController.SavePermissionToRole(new RolePermissionRequest());
+            
+            Assert.Null(result.Error.Errors);
+            Assert.Equal(ResponseStatus.Succeeded, result.Success);
+        }
+        
+        [Fact]
+        public void RemovePermissionFromRole()
+        {
+
+            var permMock = new Mock<IPermissionsManipulation>();
+            var cacheMock = new Mock<ICacheProvider>();
+            var permissionList = new List<Permission>() { null };
+            permMock.Setup(PermMockItem => PermMockItem.GetPermissionsAsync(null, null, null, null)).ReturnsAsync(permissionList);
+            var permissionController = new PermissionController(permMock.Object, cacheMock.Object);
+
+            var result = permissionController.RemovePermissionFromRole(new RolePermissionRequest());
+            
+            Assert.NotNull(result);
         }
     }
 }

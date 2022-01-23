@@ -1,12 +1,14 @@
 ﻿using NSI.DataContracts.Models;
 using NSI.Repository.Interfaces;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace NSI.Repository.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class AttachmentRepository : IAttachmentRepository
     {
         private readonly DataContext _context;

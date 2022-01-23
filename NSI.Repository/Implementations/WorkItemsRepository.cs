@@ -6,12 +6,14 @@ using NSI.Proxy.Azure.Response;
 using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NSI.Repository.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class WorkItemsRepository : IWorkItemsRepository
     {
         private readonly IAzureProxy _proxy;

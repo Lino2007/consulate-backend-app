@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,7 @@ namespace NSI.BusinessLogic.Implementations
             return await CreateRequestItemDto(RequestList);
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task<Request> SaveRequest(Guid userId, string requestReason, RequestType requestType,  IEnumerable<IFormFile> attachments, string[] attachmentTypes)
         {
             Request savedRequest = _requestsRepository.SaveRequest(new Request(userId, requestReason, requestType));
@@ -74,7 +76,7 @@ namespace NSI.BusinessLogic.Implementations
             var RequestList = await (await query.DoPagingAsync(paging)).ToListAsync();
             return await CreateRequestItemDto(RequestList);
         }
-
+        
         public async Task<IList<RequestItemDto>> CreateRequestItemDto(List<Request> RequestList)
         {
             var idToMailMap = _cacheProvider.Get<Dictionary<string, string>>("idToMail");

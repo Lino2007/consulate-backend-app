@@ -6,6 +6,7 @@ using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NSI.Common.Collation;
 using Xunit;
 
 namespace NSI.Tests.ManipulationTests
@@ -17,7 +18,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var permMock = new Mock<IPermissionsRepository>();
-            permMock.Setup(MockItem => MockItem.GetPermissionsAsync("User")).ReturnsAsync(() => {
+            permMock.Setup(MockItem => MockItem.GetPermissionsAsync("User")).ReturnsAsync(() =>
+            {
                 List<Permission> permissions = new List<Permission>();
                 permissions.Add(new Permission("newPermission"));
                 return permissions;
@@ -29,7 +31,26 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Equal(1, result.Result.Count);
+        }
 
+        [Fact]
+        public void GetPermissionsOfUser_ReturnsPermissionsWithPaging()
+        {
+            // Arrange
+            var permMock = new Mock<IPermissionsRepository>();
+            permMock.Setup(MockItem => MockItem.GetPermissionsAsync("User")).ReturnsAsync(() =>
+            {
+                List<Permission> permissions = new List<Permission>();
+                permissions.Add(new Permission("newPermission"));
+                return permissions;
+            });
+            var permissionsManipulation = new PermissionsManipulation(permMock.Object);
+
+            // Act
+            var result = permissionsManipulation.GetPermissionsAsync("User", new Paging(), null, null);
+
+            // Assert
+            Assert.Equal(1, result.Result.Count);
         }
 
         [Fact]
@@ -45,7 +66,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
 
         [Fact]
@@ -53,7 +73,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var permMock = new Mock<IPermissionsRepository>();
-            permMock.Setup(MockItem => MockItem.SavePermissionToRole(new RolePermission(new Guid(), new Guid()))).Returns(new RolePermission(new Guid(), new Guid()));
+            permMock.Setup(MockItem => MockItem.SavePermissionToRole(new RolePermission(new Guid(), new Guid())))
+                .Returns(new RolePermission(new Guid(), new Guid()));
             var permissionsManipulation = new PermissionsManipulation(permMock.Object);
 
             // Act
@@ -61,7 +82,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
 
         [Fact]
@@ -69,7 +89,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var permMock = new Mock<IPermissionsRepository>();
-            permMock.Setup(MockItem => MockItem.RemovePermissionFromRole(new RolePermission(new Guid(), new Guid()))).Returns(1);
+            permMock.Setup(MockItem => MockItem.RemovePermissionFromRole(new RolePermission(new Guid(), new Guid())))
+                .Returns(1);
             var permissionsManipulation = new PermissionsManipulation(permMock.Object);
 
             // Act
@@ -78,7 +99,6 @@ namespace NSI.Tests.ManipulationTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(ResponseStatus.Failed, result);
-
         }
 
         [Fact]
@@ -86,7 +106,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var permMock = new Mock<IPermissionsRepository>();
-            permMock.Setup(MockItem => MockItem.GetPermissionsByUserId(new Guid())).ReturnsAsync(() => {
+            permMock.Setup(MockItem => MockItem.GetPermissionsByUserId(new Guid())).ReturnsAsync(() =>
+            {
                 List<Permission> permissions = new List<Permission>();
                 permissions.Add(new Permission("newPermission"));
                 return permissions;
@@ -98,7 +119,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Equal(1, result.Result.Count);
-
         }
     }
 }

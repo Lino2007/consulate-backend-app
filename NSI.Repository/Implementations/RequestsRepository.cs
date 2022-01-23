@@ -4,11 +4,13 @@ using NSI.DataContracts.Models;
 using NSI.DataContracts.Request;
 using NSI.Repository.Interfaces;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NSI.Repository.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class RequestsRepository: IRequestsRepository
     {
         private readonly DataContext _context;

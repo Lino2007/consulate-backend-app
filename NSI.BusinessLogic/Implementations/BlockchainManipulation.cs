@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Net.Http;
@@ -18,6 +19,7 @@ using NSI.Proxy;
 
 namespace NSI.BusinessLogic.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class BlockchainManipulation : IBlockchainManipulation
     {
         private readonly string _algorithm;

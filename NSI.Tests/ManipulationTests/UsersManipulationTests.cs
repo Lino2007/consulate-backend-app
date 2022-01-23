@@ -8,6 +8,7 @@ using NSI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NSI.Common.Collation;
 using Xunit;
 
 namespace NSI.Tests.ManipulationTests
@@ -84,6 +85,24 @@ namespace NSI.Tests.ManipulationTests
             // Assert
             Assert.Null(result);
         }
+        
+        [Fact]
+        public void GetNewUser_UserRequestGenderIsNumberNull_ReturnsNull()
+        {
+            // Arrange
+            var usersMock = new Mock<IUsersRepository>();
+            usersMock.Setup(MockItem => MockItem.GetByEmail("alakovic1@etf.unsa.ba")).Returns(new User("Lino", "Bevanda", Gender.Male, "lbevanda1@etf.unsa.ba", "lbevanda1", "Sarajevo", DateTime.Now, "BiH"));
+            var usersManipulation = new UsersManipulation(usersMock.Object);
+
+            // Act
+            NewUserRequest newUserRequest = new NewUserRequest();
+            newUserRequest.Gender = 2;
+
+            var result = usersManipulation.SaveUser(newUserRequest);
+
+            // Assert
+            Assert.Null(result);
+        }
 
         [Fact]
         public void RemoveUserByEmail_CorrectEmail_ReturnsResponseStatusSuccess()
@@ -130,7 +149,7 @@ namespace NSI.Tests.ManipulationTests
             var usersManipulation = new UsersManipulation(usersMock.Object);
 
             // Act
-            var result = usersManipulation.GetUsers(null, null, null);
+            var result = usersManipulation.GetUsers(new Paging(), null, null);
 
             // Assert
             Assert.NotNull(result);
