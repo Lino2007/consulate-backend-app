@@ -4,7 +4,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- main
+  batch: true
+  branches:
+    include:
+    - main
 
 pool:
   vmImage: 'windows-latest'
@@ -14,18 +17,6 @@ variables:
     buildConfiguration: development
 
 steps:
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'NSI-Sonar-Echo'
-    organization: 'nsi-1'
-    scannerMode: 'MSBuild'
-    projectKey: 'NSI_NSI.Service.Echo'
-    projectName: 'NSI.Service.Echo'
-    extraProperties: |
-      sonar.exclusions=**/*.bin,NSI.REST/appsettings.json,NSI.REST/Startup.cs,NSI.REST/Program.cs,NSI.REST/Filters/**,NSI.Logger/**,NSI.Common/Encryption/CryptographyHelper.cs,NSI.DataContracts/Dto/**,NSI.Common/Exceptions/**
-      sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/coverage/*.xml
-      sonar.coverage.jacoco.xmlReportPaths=${Agent.TempDirectory}/coverage/*.xml
-
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
@@ -46,12 +37,6 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" --logger "trx;LogFileName=unittests.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/'
     testRunTitle: 'Tests for $(Build.BuildNumber)'
 
-- task: SonarCloudAnalyze@1
-
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '60'
-
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
@@ -60,8 +45,16 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
 
+# Archive files
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
 - task: PublishPipelineArtifact@1
-  condition: succeededOrFailed()
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
     publishLocation: 'pipeline'
