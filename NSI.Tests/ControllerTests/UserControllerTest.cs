@@ -93,26 +93,26 @@ namespace NSI.Tests.ControllerTests
             Assert.NotNull(result);
         }
         
-        [Fact]
-        public void SaveNewUserSucceededTest()
-        {
-            var userMock = new Mock<IUsersManipulation>();
-            userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
-            var empController = new UserController(null, userMock.Object, null, null, null);
-
-            var newUserRequest = new NewUserRequest();
-            newUserRequest.FirstName = "Lino";
-            newUserRequest.LastName = "Bevanda";
-            newUserRequest.Gender = 1;
-            newUserRequest.Email = "lbevanda1@etf.unsa.ba";
-            newUserRequest.Username = "Lino";
-            newUserRequest.PlaceOfBirth = "Sarajevo";
-            newUserRequest.DateOfBirth = DateTime.Now;
-            newUserRequest.Country = "BiH";
-            var result = empController.SaveNewUser(newUserRequest);
-
-            Assert.NotNull(result);
-        }
+        // [Fact]
+        // public void SaveNewUserSucceededTest()
+        // {
+        //     var userMock = new Mock<IUsersManipulation>();
+        //     userMock.Setup(UserMockItem => UserMockItem.RemoveUser(null)).Returns(ResponseStatus.Succeeded);
+        //     var empController = new UserController(null, userMock.Object, null, null, null);
+        //
+        //     var newUserRequest = new NewUserRequest();
+        //     newUserRequest.FirstName = "Lino";
+        //     newUserRequest.LastName = "Bevanda";
+        //     newUserRequest.Gender = 1;
+        //     newUserRequest.Email = "lbevanda1@etf.unsa.ba";
+        //     newUserRequest.Username = "Lino";
+        //     newUserRequest.PlaceOfBirth = "Sarajevo";
+        //     newUserRequest.DateOfBirth = DateTime.Now;
+        //     newUserRequest.Country = "BiH";
+        //     var result = empController.SaveNewUser(newUserRequest);
+        //
+        //     Assert.NotNull(result);
+        // }
         
         [Fact]
         public void GetPermissionsByUserIdTest()
