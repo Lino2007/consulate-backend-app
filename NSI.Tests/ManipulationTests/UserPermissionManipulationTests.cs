@@ -14,7 +14,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var usersPermMock = new Mock<IUserPermissionRepository>();
-            usersPermMock.Setup(MockItem => MockItem.GetUsersAndPermissionsAsync()).ReturnsAsync(() => { return null; });
+            usersPermMock.Setup(MockItem => MockItem.GetUsersAndPermissionsAsync())
+                .ReturnsAsync(() => { return null; });
             var userPermissionManipulation = new UserPermissionManipulation(usersPermMock.Object);
 
             // Act
@@ -22,7 +23,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.NotNull(result);
-
         }
 
         [Fact]
@@ -30,26 +30,29 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var usersPermMock = new Mock<IUserPermissionRepository>();
-            usersPermMock.Setup(MockItem => MockItem.GetUserPermissionsAsync("alakovic1@etf.unsa.ba")).ReturnsAsync(() => {
-                List<PermissionEnum> users = new List<PermissionEnum>();
-                users.Add(PermissionEnum.None);
-                return users;
-            });
+            usersPermMock.Setup(MockItem => MockItem.GetUserPermissionsAsync("alakovic1@etf.unsa.ba")).ReturnsAsync(
+                () =>
+                {
+                    List<PermissionEnum> users = new List<PermissionEnum>();
+                    users.Add(PermissionEnum.None);
+                    return users;
+                });
             var userPermissionManipulation = new UserPermissionManipulation(usersPermMock.Object);
 
             // Act
             var result = userPermissionManipulation.GetPermissionsForUserAsync("alakovic1@etf.unsa.ba");
 
             // Assert
-            Assert.Equal(1, result.Result.Count);
-
+            Assert.Single(result.Result);
         }
+
         [Fact]
         public void GetPermssionsForUser_CorrectEmail_ReturnsNull()
         {
             // Arrange
             var usersPermMock = new Mock<IUserPermissionRepository>();
-            usersPermMock.Setup(MockItem => MockItem.GetUserPermissionsAsync("alakovic1@etf.unsa.ba")).ReturnsAsync(() => { return null; });
+            usersPermMock.Setup(MockItem => MockItem.GetUserPermissionsAsync("alakovic1@etf.unsa.ba"))
+                .ReturnsAsync(() => { return null; });
             var userPermissionManipulation = new UserPermissionManipulation(usersPermMock.Object);
 
             // Act
@@ -57,7 +60,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.NotNull(result);
-
         }
     }
 }

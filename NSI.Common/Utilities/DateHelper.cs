@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NSI.Common.Utilities
 {
+    [ExcludeFromCodeCoverage]
     public static class DateHelper
     {
         public static DateTime ConvertToLocalTimeZone(DateTime dateTime)

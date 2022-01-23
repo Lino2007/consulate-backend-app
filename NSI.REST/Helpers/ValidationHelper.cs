@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NSI.REST.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public static class ValidationHelper
     {
         public static Common.DataContracts.Base.Error ToErrorResponse(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelStateDictionary)

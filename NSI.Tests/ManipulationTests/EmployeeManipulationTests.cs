@@ -18,9 +18,11 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.GetAllEmployees()).Returns(() => {
+            employeeMock.Setup(MockItem => MockItem.GetAllEmployees()).Returns(() =>
+            {
                 List<User> users = new List<User>();
-                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"));
                 return users;
             });
             var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
@@ -29,8 +31,7 @@ namespace NSI.Tests.ManipulationTests
             var result = employeeManipulation.GetAllEmployees();
 
             // Assert
-            Assert.Equal(1, result.Count);
-
+            Assert.Single(result);
         }
 
         [Fact]
@@ -38,7 +39,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.GetAllEmployees()).Returns(() => {
+            employeeMock.Setup(MockItem => MockItem.GetAllEmployees()).Returns(() =>
+            {
                 List<User> users = new List<User>();
                 return users;
             });
@@ -48,8 +50,7 @@ namespace NSI.Tests.ManipulationTests
             var result = employeeManipulation.GetAllEmployees();
 
             // Assert
-            Assert.Equal(0, result.Count);
-
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -57,9 +58,7 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.GetAllEmployees()).Returns(() => {
-                return null;
-            });
+            employeeMock.Setup(MockItem => MockItem.GetAllEmployees()).Returns(() => { return null; });
             var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
 
             // Act
@@ -67,7 +66,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
 
         [Fact]
@@ -75,7 +73,10 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.SaveEmployee(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"))).Returns(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+            employeeMock
+                .Setup(MockItem => MockItem.SaveEmployee(new User("Amila", "Lakovic", Gender.Female,
+                    "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"))).Returns(new User("Amila",
+                    "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
             var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
 
             // Act
@@ -83,7 +84,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
 
         [Fact]
@@ -91,7 +91,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.DeleteEmployee("alakovic1@etf.unsa.ba")).Returns(ResponseStatus.Succeeded);
+            employeeMock.Setup(MockItem => MockItem.DeleteEmployee("alakovic1@etf.unsa.ba"))
+                .Returns(ResponseStatus.Succeeded);
             var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
 
             // Act
@@ -106,7 +107,10 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.UpdateEmployee("alakovic1@etf.unsa.ba", new UpdateEmployeeRequest())).Returns(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+            employeeMock
+                .Setup(MockItem => MockItem.UpdateEmployee("alakovic1@etf.unsa.ba", new UpdateEmployeeRequest()))
+                .Returns(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"));
             var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
 
             // Act
@@ -114,7 +118,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
 
         [Fact]
@@ -122,9 +125,11 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() => {
+            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() =>
+            {
                 List<User> users = new List<User>();
-                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo", DateTime.Now, "BiH"));
+                users.Add(new User("Amila", "Lakovic", Gender.Female, "alakovic1@etf.unsa.ba", "alakovic1", "Sarajevo",
+                    DateTime.Now, "BiH"));
                 return users;
             });
             var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
@@ -133,8 +138,7 @@ namespace NSI.Tests.ManipulationTests
             var result = employeeManipulation.GetAllEmployeesAndUsers();
 
             // Assert
-            Assert.Equal(1, result.Count);
-
+            Assert.Single(result);
         }
 
         [Fact]
@@ -142,7 +146,8 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() => {
+            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() =>
+            {
                 List<User> users = new List<User>();
                 return users;
             });
@@ -152,8 +157,7 @@ namespace NSI.Tests.ManipulationTests
             var result = employeeManipulation.GetAllEmployeesAndUsers();
 
             // Assert
-            Assert.Equal(0, result.Count);
-
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -161,9 +165,7 @@ namespace NSI.Tests.ManipulationTests
         {
             // Arrange
             var employeeMock = new Mock<IEmployeeRepository>();
-            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() => {
-                return null;
-            });
+            employeeMock.Setup(MockItem => MockItem.GetEmployeesAndUsers()).Returns(() => { return null; });
             var employeeManipulation = new EmployeeManipulation(employeeMock.Object);
 
             // Act
@@ -171,8 +173,6 @@ namespace NSI.Tests.ManipulationTests
 
             // Assert
             Assert.Null(result);
-
         }
-
     }
 }

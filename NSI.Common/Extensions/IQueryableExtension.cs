@@ -3,6 +3,7 @@ using NSI.Common.DataContracts.Enumerations;
 using NSI.Common.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace NSI.Common.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class IQueryableExtension
     {
 
