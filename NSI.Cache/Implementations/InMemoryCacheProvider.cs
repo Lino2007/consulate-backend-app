@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Caching.Memory;
 using NSI.Cache.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NSI.Cache.Implementations
 {
+    [ExcludeFromCodeCoverage]
     public class InMemoryCacheProvider : ICacheProvider
     {
         private readonly IMemoryCache _memoryCache;

@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NSI.Common.Serialization;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NSI.Proxy.Azure
 {
+    [ExcludeFromCodeCoverage]
     public class AzureProxy : IAzureProxy
     {
         private string _personalAccessToken { get; set; }

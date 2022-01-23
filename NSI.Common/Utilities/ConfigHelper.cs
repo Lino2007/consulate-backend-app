@@ -1,15 +1,14 @@
 ﻿using NSI.Common.Exceptions;
 using NSI.Common.Resources;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NSI.Common.Utilities
 {
     /// <summary>
     /// Contains methods for retrieving values from configuration files
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ConfigHelper
     {
         /// <summary>

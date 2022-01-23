@@ -1,11 +1,10 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
 using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NSI.BusinessLogic.Validators.Base
 {
+    [ExcludeFromCodeCoverage]
     public abstract class NsiAbstractValidator<T> : AbstractValidator<T>, INsiValidator<T> where T : class
     {
         public new ValidationResult Validate(T instance)

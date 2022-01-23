@@ -19,13 +19,6 @@ namespace NSI.Tests.ControllerTests
 {
     public class ReqControllerTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public ReqControllerTest(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
         [Fact]
         public async Task ReqControllerTest1()
         {

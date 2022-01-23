@@ -1,8 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
 namespace NSI.Common.Utilities
 {
+    [ExcludeFromCodeCoverage]
     public static class JwtHelper
     {
         public static string GetMailFromJwtToken(string jwtToken)

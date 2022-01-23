@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace NSI.Common.Utilities
 {
+    [ExcludeFromCodeCoverage]
     public static class HashHelper
     {
         public static string ComputeFileHash(Stream stream)

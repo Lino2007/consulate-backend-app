@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace NSI.DataContracts.Oasis.Responses
 {
+    [ExcludeFromCodeCoverage]
     public class LoginResponse
     {
         public string AccessToken { get; set; }

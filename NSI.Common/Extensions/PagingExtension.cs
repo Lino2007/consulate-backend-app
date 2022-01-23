@@ -1,12 +1,11 @@
 ﻿using NSI.Common.Collation;
 using NSI.Common.Exceptions;
 using NSI.Common.Resources;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NSI.Common.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class PagingExtension
     {
         /// <summary>

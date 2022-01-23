@@ -1,11 +1,10 @@
 ﻿using NSI.Common.Utilities;
-using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 
 namespace NSI.Common.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class IOrderedQueryableExtension
     {
         #region IOrderedQueryable Extension Methods

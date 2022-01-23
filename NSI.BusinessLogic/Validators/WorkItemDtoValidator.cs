@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
 using NSI.BusinessLogic.Validators.Base;
 using NSI.DataContracts.Models;
 using FluentValidation;
@@ -8,6 +6,7 @@ using NSI.Resources.Messages;
 
 namespace NSI.BusinessLogic.Validators
 {
+    [ExcludeFromCodeCoverage]
     public class WorkItemDtoValidator : NsiAbstractValidator<WorkItemDto>
     {
         public WorkItemDtoValidator()

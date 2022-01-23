@@ -1,10 +1,9 @@
 ﻿using NSI.Common.DataContracts.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NSI.Common.Collation
 {
+    [ExcludeFromCodeCoverage]
     public class SortCriteria
     {
         public string Column { get; set; }

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NSI.Proxy.Azure.Request
 {
+    [ExcludeFromCodeCoverage]
     public class GetWorkItemsBatchRequest
     {
         public IList<int> Ids { get; set; }

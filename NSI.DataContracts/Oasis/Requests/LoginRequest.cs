@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace NSI.DataContracts.Oasis.Requests
 {
+    [ExcludeFromCodeCoverage]
     public class LoginRequest
     {
         public string Audience { get; set; }

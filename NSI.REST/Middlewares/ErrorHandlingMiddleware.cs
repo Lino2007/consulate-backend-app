@@ -7,15 +7,15 @@ using NSI.Common.Resources;
 using NSI.Common.Serialization;
 using NSI.Logger.Interfaces;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NSI.REST.Middlewares
 {
+    [ExcludeFromCodeCoverage]
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _next;

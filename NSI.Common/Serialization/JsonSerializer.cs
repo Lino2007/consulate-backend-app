@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace NSI.Common.Serialization
 {
+    [ExcludeFromCodeCoverage]
     public static class JsonHelper
     {
         /// <summary>

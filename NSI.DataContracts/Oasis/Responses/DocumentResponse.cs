@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NSI.DataContracts.Oasis.Models;
 
 namespace NSI.DataContracts.Oasis.Responses
 {
+    [ExcludeFromCodeCoverage]
     public class DocumentResponse
     {
         public string Id { get; set; }
