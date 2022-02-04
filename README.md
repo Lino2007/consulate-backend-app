@@ -1,20 +1,16 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Consulate Web App
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+- Frontend application: [`https://nsi-dev-ui-echo.azurewebsites.net/`](https://nsi-dev-ui-echo.azurewebsites.net/) <br>
+- Backend application: [`https://nsi-dev-api-echo.azurewebsites.net/`](https://nsi-dev-api-echo.azurewebsites.net/) <br>
+- SonarCloud: [`https://sonarcloud.io/summary/overall?id=NSI_NSI.Service.Echo`](https://sonarcloud.io/summary/overall?id=NSI_NSI.Service.Echo) <br>
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+**Azure repositories:** Backend ([Service](https://dev.azure.com/nsi/NSI%202021/_git/NSI.Service.Echo)), Frontend ([UI](https://dev.azure.com/nsi/NSI%202021/_git/NSI.UI.Echo)), Database ([DB](https://dev.azure.com/nsi/NSI%202021/_git/NSI.DB.Echo)).
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Architecture
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+The following is a diagram of the application architecture:
+
+![architecture](https://user-images.githubusercontent.com/44180058/152588578-45eca551-38c7-4e7b-841f-c632662bb34b.png)
+
+## How To Use :wrench:
+To clone and run this application, you will need [Git](https://git-scm.com), [.NET](https://dotnet.microsoft.com/en-us/download) and [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads).
