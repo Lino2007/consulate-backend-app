@@ -1,10 +1,7 @@
 # Consulate Web App
 
-- Frontend application: [`https://nsi-dev-ui-echo.azurewebsites.net/`](https://nsi-dev-ui-echo.azurewebsites.net/) <br>
-- Backend application: [`https://nsi-dev-api-echo.azurewebsites.net/`](https://nsi-dev-api-echo.azurewebsites.net/) <br>
 - SonarCloud: [`https://sonarcloud.io/summary/overall?id=NSI_NSI.Service.Echo`](https://sonarcloud.io/summary/overall?id=NSI_NSI.Service.Echo) <br>
-
-**Azure repositories:** Backend ([Service](https://dev.azure.com/nsi/NSI%202021/_git/NSI.Service.Echo)), Frontend ([UI](https://dev.azure.com/nsi/NSI%202021/_git/NSI.UI.Echo)), Database ([DB](https://dev.azure.com/nsi/NSI%202021/_git/NSI.DB.Echo)).
+- Azure repositories: backend ([Service](https://dev.azure.com/nsi/NSI%202021/_git/NSI.Service.Echo)), frontend ([UI](https://dev.azure.com/nsi/NSI%202021/_git/NSI.UI.Echo)), database ([DB](https://dev.azure.com/nsi/NSI%202021/_git/NSI.DB.Echo)).
 
 ## Architecture
 
@@ -14,3 +11,6 @@ The following is a diagram of the application architecture:
 
 ## How To Use :wrench:
 To clone and run this application, you will need [Git](https://git-scm.com), [.NET](https://dotnet.microsoft.com/en-us/download) and [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads).
+
+## Demo :movie_camera:
+Check out demo video [here](https://drive.google.com/file/d/1qNhbIbIK2KRY1OwJxcCyX1nnegPMgq0X/view).
